@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>第2章 简单的代数式 · 数学预习助手</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f7fa; color: #2c3e50; }
+
+/* 顶部导航 */
+.top-nav { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+.back-btn { background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-size: 0.95em; cursor: pointer; }
+.chapter-title { font-size: 1.1em; font-weight: bold; }
+
+/* 目录页 - 三栏 */
+.toc-view { padding: 20px 15px; }
+.toc-view h2 { text-align: center; color: #667eea; margin-bottom: 20px; font-size: 1.3em; }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; max-width: 900px; margin: 0 auto; }
+@media (max-width: 900px) { .toc-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .toc-grid { grid-template-columns: 1fr; } }
+.toc-item { background: white; border-radius: 12px; padding: 18px 14px; text-align: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 2px solid transparent; transition: all 0.2s; }
+.toc-item:hover { border-color: #667eea; transform: translateY(-2px); }
+.toc-item .num { font-size: 1.6em; font-weight: bold; color: #667eea; }
+.toc-item .name { font-size: 0.92em; color: #555; margin-top: 6px; line-height: 1.4; }
+
+/* 小节内容页 */
+.section-view { display: none; padding: 15px; max-width: 800px; margin: 0 auto; }
+.section-view.active { display: block; }
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.section-header .back-toc { background: #667eea; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.88em; }
+.section-header h2 { font-size: 1.2em; color: #667eea; }
+
+/* 五层卡片 */
+.card { background: white; border-radius: 12px; padding: 18px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.card h3 { font-size: 1em; margin-bottom: 10px; color: #444; }
+.card p, .card li { font-size: 0.92em; line-height: 1.7; color: #555; }
+.card ul { padding-left: 18px; }
+.concept-box { border-left: 4px solid #667eea; background: #f0f4ff; }
+.example-box { border-left: 4px solid #f0a500; background: #fff8f0; }
+.tips-box { border-left: 4px solid #4caf50; background: #f0fff4; }
+.warn-box { border-left: 4px solid #f44336; background: #fff5f5; }
+
+.toggle-answer { background: none; border: 1.5px solid #667eea; color: #667eea; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.88em; margin-top: 10px; }
+.toggle-answer:hover { background: #667eea; color: white; }
+.answer { display: none; margin-top: 10px; padding: 12px; background: #f8f9ff; border-radius: 8px; font-size: 0.9em; color: #444; line-height: 1.7; }
+
+/* 练习题 */
+.exercise-block { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.exercise-block h4 { font-size: 1em; color: #333; margin-bottom: 12px; }
+.ex-option { display: block; padding: 9px 14px; margin: 6px 0; border: 1.5px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 0.92em; transition: all 0.15s; }
+.ex-option:hover { border-color: #667eea; background: #f8f9ff; }
+.ex-option.correct { border-color: #4caf50; background: #e8f5e9; color: #2e7d32; font-weight: bold; }
+.ex-option.wrong { border-color: #f44336; background: #ffebee; color: #c62828; }
+.ex-option.disabled { pointer-events: none; opacity: 0.6; }
+
+.fill-input { width: 100%; padding: 9px 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 0.95em; margin: 8px 0; }
+.fill-btn { background: #667eea; color: white; border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-top: 6px; }
+.fill-feedback { margin-top: 8px; padding: 8px 12px; border-radius: 8px; font-size: 0.88em; display: none; }
+.fill-feedback.correct { background: #e8f5e9; color: #2e7d32; display: block; }
+.fill-feedback.wrong { background: #ffebee; color: #c62828; display: block; }
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+    <button class="back-btn" onclick="location.href='数学预习助手.html'">← 返回</button>
+    <div class="chapter-title">第2章 简单的代数式</div>
+</div>
+
+<!-- ============ 目录视图 ============ -->
+<div class="toc-view" id="tocView">
+    <h2>📚 选择小节</h2>
+    <div class="toc-grid" id="tocGrid"></div>
+</div>
+
+<!-- ============ 各小节内容 ============ -->
+
+<!-- 2.1 用字母表示数 -->
+<div class="section-view" id="sec-2-1">
+    <div class="section-header">
+        <button class="back-toc" onclick="showToc()">← 目录</button>
+        <h2>2.1 用字母表示数</h2>
+    </div>
+    
+    <div class="card concept-box">
+        <h3>📖 基础概念</h3>
+        <p>用字母表示数，可以把数量和数量之间的关系<b>一般化</b>，这是从算术到代数的重要一步。</p>
+        <p><b>书写规范</b>（考试经常扣分！）：</p>
+        <ul>
+            <li>数字与字母相乘，<b>数字写前面</b>，2×a 写作 <code>2a</code></li>
+            <li>字母与字母相乘，直接写在一起，a×b 写作 <code>ab</code></li>
+            <li>数字与字母相除，写成分数形式，a÷2 写作 <code>a/2</code></li>
+            <li><b>"1" 作为系数时省略</b>：1a 写作 <code>a</code></li>
+            <li>带分数要先化成假分数：2⅓a = <code>7/3 a</code></li>
+        </ul>
+    </div>
+    
+    <div class="card example-box">
+        <h3>📝 基础例题</h3>
+        <p>用代数式表示：</p>
+        <p style="margin:8px 0;font-style:italic;">(1) a 与 b 的和的 2 倍 &nbsp;&nbsp; (2) a 的 3 倍与 b 的 1/2 的差</p>
+        <button class="toggle-answer" onclick="toggleAnswer(this)">查看解析</button>
+        <div class="answer">
+            <p>(1) "和的 2 倍"：先求和，再乘 2 → <code>2(a+b)</code>（注意加括号！）</p>
+            <p>(2) "a 的 3 倍" = <code>3a</code>，"b 的 1/2" = <code>1/2 b</code>，相减 → <code>3a - 1/2 b</code></p>
+        </div>
+    </div>
+    
+    <div class="card warn-box">
+        <h3>⚠️ 易错提醒</h3>
+        <ul>
+            <li>"a 与 b 的和的 2 倍" 是 <code>2(a+b)</code>，不是 <code>2a+b</code>！</li>
+            <li>除法结果必须写成分数形式，不能保留"÷"号。</li>
+            <li>带分数必须先化成假分数再运算。</li>
+        </ul>
+    </div>
+    
+    <div class="exercise-block">
+        <h4>📝 即时练习（5道题）</h4>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习1</b>：用代数式表示：a 与 b 的和的相反数。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：<code>-(a + b)</code></p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习2</b>：长方形的宽是 a 厘米，长比宽多 3 厘米，用代数式表示周长和面积。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：长 = a + 3，周长 = <code>2(a + a + 3) = 4a + 6</code> 厘米，面积 = <code>a(a + 3)</code> 平方厘米</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习3</b>：下列说法正确的是（ ）</p>
+            <div class="ex-option" onclick="checkOption(this, 21, 1)">A. a×2 写作 a2</div>
+            <div class="ex-option" onclick="checkOption(this, 21, 2)">B. a÷2 写作 a/2</div>
+            <div class="ex-option" onclick="checkOption(this, 21, 3)">C. 1×a 写作 1a</div>
+            <div class="ex-option" onclick="checkOption(this, 21, 4)">D. 2×3 写作 23</div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习4</b>：一辆汽车以每小时 v 千米的速度行驶，t 小时后行驶多少千米？</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：<code>vt</code> 千米</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习5</b>：用代数式表示：x 的 2 倍与 y 的 3 倍的和。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：<code>2x + 3y</code></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2.2 代数式的概念 -->
+<div class="section-view" id="sec-2-2">
+    <div class="section-header">
+        <button class="back-toc" onclick="showToc()">← 目录</button>
+        <h2>2.2 代数式的概念</h2>
+    </div>
+    
+    <div class="card concept-box">
+        <h3>📖 基础概念</h3>
+        <p><b>代数式</b>：用运算符号（加、减、乘、除、乘方）把数或表示数的字母连接而成的式子。</p>
+        <p><b>注意</b>：单独的一个数或一个字母也是代数式（如 5, a, x）。</p>
+    </div>
+    
+    <div class="card example-box">
+        <h3>📝 基础例题</h3>
+        <p>判断下列哪些是代数式：</p>
+        <p style="margin:8px 0;font-style:italic;">3x + 5, 2a = 6, S = πr², 0, -x</p>
+        <button class="toggle-answer" onclick="toggleAnswer(this)">查看解析</button>
+        <div class="answer">
+            <p><b>代数式</b>：3x + 5, 0, -x</p>
+            <p><b>不是代数式</b>：2a = 6（等式）, S = πr²（等式）</p>
+            <p><b>关键</b>：代数式不含等号或不等号。</p>
+        </div>
+    </div>
+    
+    <div class="exercise-block">
+        <h4>📝 即时练习（5道题）</h4>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习1</b>：下列各式中，哪些是代数式？（多选）</p>
+            <p style="margin:8px 0;font-style:italic;">A. 2x + 3 &nbsp;&nbsp; B. 5 &nbsp;&nbsp; C. a &nbsp;&nbsp; D. x > 3 &nbsp;&nbsp; E. x + y = 5</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：A, B, C（D 是不等式，E 是等式，都不是代数式）</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习2</b>：代数式 <code>(a + b) / 2</code> 表示的是（ ）</p>
+            <div class="ex-option" onclick="checkOption(this, 22, 1)">A. a 与 b 的和</div>
+            <div class="ex-option" onclick="checkOption(this, 22, 2)">B. a 与 b 的差</div>
+            <div class="ex-option" onclick="checkOption(this, 22, 3)">C. a 与 b 的平均值</div>
+            <div class="ex-option" onclick="checkOption(this, 22, 4)">D. a 与 b 的积</div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习3</b>：用代数式表示：棱长为 a 的正方体的体积。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：<code>a³</code></p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习4</b>：下列说法正确的是（ ）</p>
+            <div class="ex-option" onclick="checkOption(this, 22, 5)">A. 代数式可以含等号</div>
+            <div class="ex-option" onclick="checkOption(this, 22, 6)">B. 单独的一个数不是代数式</div>
+            <div class="ex-option" onclick="checkOption(this, 22, 7)">C. 单独的一个字母是代数式</div>
+            <div class="ex-option" onclick="checkOption(this, 22, 8)">D. 代数式 x > 2 是正确的写法</div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习5</b>：用代数式表示：半径为 r 的圆的周长和面积。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：周长 = <code>2πr</code>，面积 = <code>πr²</code></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2.3 代数式的值 -->
+<div class="section-view" id="sec-2-3">
+    <div class="section-header">
+        <button class="back-toc" onclick="showToc()">← 目录</button>
+        <h2>2.3 代数式的值</h2>
+    </div>
+    
+    <div class="card concept-box">
+        <h3>📖 基础概念</h3>
+        <p><b>代数式的值</b>：用数值代替代数式里的字母，计算后得到的结果。</p>
+        <p><b>步骤</b>：① 写出字母的值 → ② 代入代数式 → ③ 按运算顺序计算</p>
+        <p><b>注意</b>：代入负数或分数时，一定要加上括号！</p>
+    </div>
+    
+    <div class="card example-box">
+        <h3>📝 基础例题</h3>
+        <p>当 a = 3, b = -2 时，求 a² - 2ab + b² 的值。</p>
+        <button class="toggle-answer" onclick="toggleAnswer(this)">查看解析</button>
+        <div class="answer">
+            <p><b>解</b>：</p>
+            <p>原式 = 3² - 2×3×(-2) + (-2)²</p>
+            <p>= 9 - (-12) + 4</p>
+            <p>= 9 + 12 + 4 = <b>25</b></p>
+        </div>
+    </div>
+    
+    <div class="card warn-box">
+        <h3>⚠️ 易错提醒</h3>
+        <ul>
+            <li><b>代入负数时千万别忘了加括号</b>！</li>
+            <li>错误：a = -2 代入 a² 时写成 -2² = -4（错！）</li>
+            <li>正确：(-2)² = 4</li>
+        </ul>
+    </div>
+    
+    <div class="exercise-block">
+        <h4>📝 即时练习（5道题）</h4>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习1</b>：当 x = 2, y = -3 时，求 2x² - 3y + 1 的值。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>解</b>：原式 = 2×(2)² - 3×(-3) + 1 = 8 + 9 + 1 = <b>18</b></p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习2</b>：当 a = -1, b = 2 时，求 (a + b)(a - b) 的值。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>解</b>：原式 = (-1 + 2)(-1 - 2) = 1 × (-3) = <b>-3</b></p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习3</b>：当 x = 1/2 时，求 4x - 3 的值。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>解</b>：原式 = 4×(1/2) - 3 = 2 - 3 = <b>-1</b></p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习4</b>：当 a = -2, b = -3 时，求 a² + 2ab + b² 的值。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>解</b>：原式 = (-2)² + 2×(-2)×(-3) + (-3)² = 4 + 12 + 9 = <b>25</b></p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习5</b>：当 x = -1 时，求 -x² + 2x - 1 的值。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>解</b>：原式 = -(-1)² + 2×(-1) - 1 = -1 + (-2) - 1 = <b>-4</b></p>
+                <p><b>注意</b>：-x² = -(x²)，不是 (-x)²！</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2.4 一次式的概念 -->
+<div class="section-view" id="sec-2-4">
+    <div class="section-header">
+        <button class="back-toc" onclick="showToc()">← 目录</button>
+        <h2>2.4 一次式的概念</h2>
+    </div>
+    
+    <div class="card concept-box">
+        <h3>📖 基础概念</h3>
+        <p><b>单项式</b>：只含有乘法（和乘方）运算的代数式叫做单项式。</p>
+        <p><b>多项式</b>：几个单项式的和叫做多项式。</p>
+        <p><b>一次式</b>：次数为 1 的整式（单项式或多项式）。</p>
+    </div>
+    
+    <div class="card warn-box">
+        <h3>⚠️ 易错提醒</h3>
+        <ul>
+            <li>x + y 不是一次式（含两个字母）</li>
+            <li>x² 不是一次式（指数为 2）</li>
+            <li>3x + 2y - 5 不是一次式（含两个字母）</li>
+        </ul>
+    </div>
+    
+    <div class="exercise-block">
+        <h4>📝 即时练习（5道题）</h4>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习1</b>：下列各式中，哪些是单项式？（多选）</p>
+            <p style="margin:8px 0;font-style:italic;">A. 3x &nbsp;&nbsp; B. -2xy² &nbsp;&nbsp; C. 3x + 2y &nbsp;&nbsp; D. 5 &nbsp;&nbsp; E. a/b</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：A, B, D（C 是多项式，E 含有除法，不是单项式）</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习2</b>：单项式 -2xy² 的系数和次数分别是（ ）</p>
+            <div class="ex-option" onclick="checkOption(this, 24, 1)">A. -2, 2</div>
+            <div class="ex-option" onclick="checkOption(this, 24, 2)">B. -2, 3</div>
+            <div class="ex-option" onclick="checkOption(this, 24, 3)">C. 2, 2</div>
+            <div class="ex-option" onclick="checkOption(this, 24, 4)">D. 2, 3</div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习3</b>：下列式子中，哪些是一次式？（多选）</p>
+            <p style="margin:8px 0;font-style:italic;">A. 3x &nbsp;&nbsp; B. -2x + 5 &nbsp;&nbsp; C. x + y &nbsp;&nbsp; D. 2x + 3y - 1 &nbsp;&nbsp; E. x²</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：A, B（C 和 D 含两个字母，不是一次式；E 次数为 2，不是一次式）</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习4</b>：多项式 3x² - 2x + 5 的次数是______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：2（次数最高的项是 3x²，次数为 2）</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习5</b>：单项式 1/2 ab²c 的次数和系数分别是______和______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：次数 = 4（1+2+1），系数 = 1/2</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2.5 一次式的同类项 -->
+<div class="section-view" id="sec-2-5">
+    <div class="section-header">
+        <button class="back-toc" onclick="showToc()">← 目录</button>
+        <h2>2.5 一次式的同类项</h2>
+    </div>
+    
+    <div class="card concept-box">
+        <h3>📖 基础概念</h3>
+        <p><b>同类项</b>：所含字母相同，并且相同字母的指数也相同的项。</p>
+        <p><b>关键</b>：① 字母相同 ② 相同字母的指数相同（与系数无关，与字母顺序无关）</p>
+    </div>
+    
+    <div class="card example-box">
+        <h3>📝 基础例题</h3>
+        <p>下列各组式子中，哪些是同类项？</p>
+        <p style="margin:8px 0;font-style:italic;">(1) 3x²y 与 -2x²y &nbsp;&nbsp; (2) 2ab 与 3ba &nbsp;&nbsp; (3) 5x² 与 5x³</p>
+        <button class="toggle-answer" onclick="toggleAnswer(this)">查看解析</button>
+        <div class="answer">
+            <p>(1) 是同类项（字母相同，x 的指数都是 2，y 的指数都是 1）</p>
+            <p>(2) 是同类项（字母相同，与顺序无关）</p>
+            <p>(3) 不是同类项（x 的指数不同）</p>
+        </div>
+    </div>
+    
+    <div class="card warn-box">
+        <h3>⚠️ 易错提醒</h3>
+        <ul>
+            <li>3x²y 和 -2xy² 不是同类项！虽然都有 x 和 y，但指数不同。</li>
+            <li>常数项都是同类项（比如 3 和 -5 是同类项）。</li>
+        </ul>
+    </div>
+    
+    <div class="exercise-block">
+        <h4>📝 即时练习（5道题）</h4>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习1</b>：下列各组式子中，是同类项的有（ ）（多选）</p>
+            <p style="margin:8px 0;font-style:italic;">A. 3x 与 -2x &nbsp;&nbsp; B. 2ab 与 2a &nbsp;&nbsp; C. 5 与 -3 &nbsp;&nbsp; D. x²y 与 xy²</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：A, C（B 字母不同，D 指数不同）</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习2</b>：合并同类项：3x² - 2x + 5 - x² + 4x - 3</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>解</b>：原式 = (3x² - x²) + (-2x + 4x) + (5 - 3) = <b>2x² + 2x + 2</b></p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习3</b>：下列说法正确的是（ ）</p>
+            <div class="ex-option" onclick="checkOption(this, 25, 1)">A. 字母相同的项是同类项</div>
+            <div class="ex-option" onclick="checkOption(this, 25, 2)">B. 常数都是同类项</div>
+            <div class="ex-option" onclick="checkOption(this, 25, 3)">C. x²y 与 xy² 是同类项</div>
+            <div class="ex-option" onclick="checkOption(this, 25, 4)">D. 系数相同的项是同类项</div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习4</b>：如果 3xᵐy² 与 -2x³yⁿ 是同类项，那么 m = ______，n = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：m = 3，n = 2（同类项要求相同字母的指数相同）</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习5</b>：合并同类项：-a + 2b - 3a + 5b = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：-4a + 7b</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2.6 一次式的加减 -->
+<div class="section-view" id="sec-2-6">
+    <div class="section-header">
+        <button class="back-toc" onclick="showToc()">← 目录</button>
+        <h2>2.6 一次式的加减</h2>
+    </div>
+    
+    <div class="card concept-box">
+        <h3>📖 基础概念</h3>
+        <p><b>去括号法则</b>：</p>
+        <ul>
+            <li>括号前是"+"号：去掉括号和"+"号，括号内各项不变号</li>
+            <li>括号前是"-"号：去掉括号和"-"号，括号内各项都变号</li>
+        </ul>
+        <p><b>整式加减的步骤</b>：① 如果有括号，先去括号 → ② 合并同类项</p>
+    </div>
+    
+    <div class="card example-box">
+        <h3>📝 基础例题</h3>
+        <p>计算：(3a² - 2ab + 5) - (a² + 4ab - 3)</p>
+        <button class="toggle-answer" onclick="toggleAnswer(this)">查看解析</button>
+        <div class="answer">
+            <p>先去括号（第二个括号前是"-"，里面各项变号）：</p>
+            <p>= 3a² - 2ab + 5 - a² - 4ab + 3</p>
+            <p>合并同类项：</p>
+            <p>= (3a²-a²) + (-2ab-4ab) + (5+3)</p>
+            <p>= <b>2a² - 6ab + 8</b></p>
+        </div>
+    </div>
+    
+    <div class="card tips-box">
+        <h3>💡 解题技巧</h3>
+        <ul>
+            <li>用不同符号标记不同类型的同类项</li>
+            <li>移项时要带符号一起移动</li>
+            <li>结果是一次式时，按字母顺序排列</li>
+        </ul>
+    </div>
+    
+    <div class="exercise-block">
+        <h4>📝 即时练习（5道题）</h4>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习1</b>：计算：(2x + 3) - (x - 5) = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：x + 8（计算：2x + 3 - x + 5 = x + 8）</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习2</b>：计算：3(a + 2b) - 2(2a - b) = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：-a + 8b（计算：3a + 6b - 4a + 2b = -a + 8b）</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习3</b>：去括号：-2(3x - 5y + 1) = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：-6x + 10y - 2</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习4</b>：计算：(5x² - 3x + 2) + (2x² + 4x - 1) = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：7x² + x + 1</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习5</b>：计算：(4a - 3b) - (2a + 5b) = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：2a - 8b</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2.7 数与一次式相乘 -->
+<div class="section-view" id="sec-2-7">
+    <div class="section-header">
+        <button class="back-toc" onclick="showToc()">← 目录</button>
+        <h2>2.7 数与一次式相乘</h2>
+    </div>
+    
+    <div class="card concept-box">
+        <h3>📖 基础概念</h3>
+        <p><b>分配律</b>：k(a + b) = ka + kb，这是数与一次式相乘的核心法则。</p>
+        <p><b>步骤</b>：① 用数字因数乘以括号内的每一项 → ② 注意符号！</p>
+    </div>
+    
+    <div class="card example-box">
+        <h3>📝 基础例题</h3>
+        <p>计算：-3(2x - 5y + 1)</p>
+        <button class="toggle-answer" onclick="toggleAnswer(this)">查看解析</button>
+        <div class="answer">
+            <p>用分配律：</p>
+            <p>= (-3)×2x + (-3)×(-5y) + (-3)×1</p>
+            <p>= <b>-6x + 15y - 3</b></p>
+        </div>
+    </div>
+    
+    <div class="card warn-box">
+        <h3>⚠️ 易错提醒</h3>
+        <ul>
+            <li>分配律时，数字因数要乘以<b>每一项</b>，不能漏项！</li>
+            <li>符号最容易错：-2(3-5) = -6+10 = 4，不是 -6-10 = -16！</li>
+        </ul>
+    </div>
+    
+    <div class="exercise-block">
+        <h4>📝 即时练习（5道题）</h4>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习1</b>：计算：2(3x - 4y) = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：6x - 8y</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习2</b>：计算：-4(x - 2y + 3) = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：-4x + 8y - 12</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习3</b>：计算：1/2(4x - 6y) = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：2x - 3y</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习4</b>：先去括号，再合并同类项：3(x + 2) - 2(x - 1) = ______。</p>
+            <button class="toggle-answer" onclick="toggleAnswer(this)">查看答案</button>
+            <div class="answer">
+                <p><b>答</b>：x + 8（计算：3x + 6 - 2x + 2 = x + 8）</p>
+            </div>
+        </div>
+        
+        <div style="margin:15px 0;">
+            <p style="font-size:0.92em;margin-bottom:8px;"><b>练习5</b>：下列说法正确的是（ ）</p>
+            <div class="ex-option" onclick="checkOption(this, 27, 1)">A. -2(3x - 1) = -6x - 2</div>
+            <div class="ex-option" onclick="checkOption(this, 27, 2)">B. -2(3x - 1) = -6x + 2</div>
+            <div class="ex-option" onclick="checkOption(this, 27, 3)">C. -2(3x - 1) = -5x</div>
+            <div class="ex-option" onclick="checkOption(this, 27, 4)">D. -2(3x - 1) = -6x - 1</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 目录数据
+const tocItems = [
+    { id: 'sec-2-1', num: '2.1', name: '用字母表示数' },
+    { id: 'sec-2-2', num: '2.2', name: '代数式的概念' },
+    { id: 'sec-2-3', num: '2.3', name: '代数式的值' },
+    { id: 'sec-2-4', num: '2.4', name: '一次式的概念' },
+    { id: 'sec-2-5', num: '2.5', name: '一次式的同类项' },
+    { id: 'sec-2-6', num: '2.6', name: '一次式的加减' },
+    { id: 'sec-2-7', num: '2.7', name: '数与一次式相乘' }
+];
+
+// 渲染目录
+function renderToc() {
+    const grid = document.getElementById('tocGrid');
+    grid.innerHTML = '';
+    tocItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'toc-item';
+        div.onclick = () => showSection(item.id);
+        div.innerHTML = `<div class="num">${item.num}</div><div class="name">${item.name}</div>`;
+        grid.appendChild(div);
+    });
+}
+
+// 显示目录
+function showToc() {
+    document.getElementById('tocView').style.display = 'block';
+    document.querySelectorAll('.section-view').forEach(v => v.classList.remove('active'));
+}
+
+// 显示小节
+function showSection(id) {
+    document.getElementById('tocView').style.display = 'none';
+    document.querySelectorAll('.section-view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// 切换答案显示
+function toggleAnswer(btn) {
+    const answer = btn.nextElementSibling;
+    if (answer.style.display === 'block') {
+        answer.style.display = 'none';
+        btn.textContent = '查看解析';
+    } else {
+        answer.style.display = 'block';
+        btn.textContent = '隐藏解析';
+    }
+}
+
+// 检查选择题
+function checkOption(el, qId, optIndex) {
+    const parent = el.parentElement;
+    const options = parent.querySelectorAll('.ex-option');
+    
+    // 禁用所有选项
+    options.forEach(opt => {
+        opt.classList.add('disabled');
+        opt.style.pointerEvents = 'none';
+    });
+    
+    // 正确答案映射
+    const answers = {
+        21: 2,  // 练习3：B
+        22: 3,  // 练习2：C
+        24: 2,  // 练习2：B
+        25: 2,  // 练习3：B
+        27: 2   // 练习5：B
+    };
+    
+    if (answers[qId] === optIndex) {
+        el.classList.add('correct');
+    } else {
+        el.classList.add('wrong');
+        // 显示正确答案
+        options[answers[qId]-1].classList.add('correct');
+    }
+}
+
+// 页面加载时渲染目录
+renderToc();
+</script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>六年级预习助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding-top: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .subject-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 900px) {
+            .subject-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .subject-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .subject-card.chinese {
+            border-left: 6px solid #e74c3c;
+        }
+        
+        .subject-card.math {
+            border-left: 6px solid #3498db;
+        }
+        
+        .subject-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .subject-icon {
+            font-size: 3em;
+            margin-right: 20px;
+        }
+        
+        .subject-title {
+            flex: 1;
+        }
+        
+        .subject-title h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .subject-title p {
+            color: #666;
+            font-size: 1em;
+        }
+        
+        .subject-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .info-value {
+            color: #333;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-fill.chinese {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+        
+        .progress-fill.math {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+        }
+        
+        .subject-card.english {
+            border-left: 6px solid #2ecc71;
+        }
+        
+        .progress-fill.english {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+        }
+        
+        .start-btn.english {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.85em;
+            color: #999;
+        }
+        
+        .start-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .start-btn.chinese {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .start-btn.math {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .subject-card:hover .start-btn {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.7;
+            font-size: 0.9em;
+            padding-bottom: 30px;
+        }
+        
+        .stats {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 六年级预习助手</h1>
+            <p>上海教材 · 暑假预习 · 快乐学习</p>
+        </div>
+        
+        <div class="stats" id="statsCard">
+            <div style="font-size: 1.1em; margin-bottom: 5px;">📊 总体进度</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalCompleted">0</div>
+                    <div class="stat-label">已完成课时</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalSections">0</div>
+                    <div class="stat-label">总课时</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalProgress">0%</div>
+                    <div class="stat-label">完成率</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="subject-grid">
+            <a href="语文预习助手.html" class="subject-card chinese">
+                <div class="subject-header">
+                    <div class="subject-icon">📖</div>
+                    <div class="subject-title">
+                        <h2>语文预习助手</h2>
+                        <p>六年级上册 · 35课</p>
+                    </div>
+                </div>
+                <div class="subject-info">
+                    <div class="info-row">
+                        <span class="info-label">课程数量</span>
+                        <span class="info-value">35 课</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">学习功能</span>
+                        <span class="info-value">朗读录音 · 词语练习 · 文学常识 · 句子标注</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill chinese" id="chineseProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="chineseCompleted">0/35 课已完成</span>
+                        <span id="chinesePercent">0%</span>
+                    </div>
+                </div>
+                <div class="start-btn chinese">开始学习 →</div>
+            </a>
+            
+            <a href="数学预习助手.html" class="subject-card math">
+                <div class="subject-header">
+                    <div class="subject-icon">🔢</div>
+                    <div class="subject-title">
+                        <h2>数学预习助手</h2>
+                        <p>六年级上册 · 5章 27节</p>
+                    </div>
+                </div>
+                <div class="subject-info">
+                    <div class="info-row">
+                        <span class="info-label">章节数量</span>
+                        <span class="info-value">5 章 · 27 节</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">学习功能</span>
+                        <span class="info-value">知识点讲解 · 例题 · 练习题</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill math" id="mathProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="mathCompleted">0/27 节已完成</span>
+                        <span id="mathPercent">0%</span>
+                    </div>
+                </div>
+                <div class="start-btn math">开始学习 →</div>
+            </a>
+            
+            <a href="英语预习助手.html" class="subject-card english">
+                <div class="subject-header">
+                    <div class="subject-icon">🔤</div>
+                    <div class="subject-title">
+                        <h2>英语预习助手</h2>
+                        <p>五年级下学期 · 6个Unit</p>
+                    </div>
+                </div>
+                <div class="subject-info">
+                    <div class="info-row">
+                        <span class="info-label">Unit数量</span>
+                        <span class="info-value">6 个Unit · 275 个单词</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">学习功能</span>
+                        <span class="info-value">词找意 · 意找词 · 填空单词 · 默写单词</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill english" id="englishProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="englishCompleted">0/24 环节已完成</span>
+                        <span id="englishPercent">0%</span>
+                    </div>
+                </div>
+                <div class="start-btn english">开始学习 →</div>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>💡 提示：学习进度会自动保存，下次打开继续学习</p>
+            <p style="margin-top: 10px;">Made with ❤️ for 六年级学生</p>
+        </div>
+    </div>
+    
+    <script>
+        // 更新语文进度
+        function updateChineseProgress() {
+            const total = 35;
+            let completed = 0;
+            for (let i = 1; i <= total; i++) {
+                if (localStorage.getItem('chinese_lesson_' + i) === 'completed') {
+                    completed++;
+                }
+            }
+            const percent = Math.round((completed / total) * 100);
+            document.getElementById('chineseProgress').style.width = percent + '%';
+            document.getElementById('chineseCompleted').textContent = completed + '/' + total + ' 课已完成';
+            document.getElementById('chinesePercent').textContent = percent + '%';
+            return { completed, total, percent };
+        }
+        
+        // 更新数学进度
+        function updateMathProgress() {
+            const total = 27;  // 2 + 11 + 7 + 3 + 4 = 27
+            let completed = 0;
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < 20; j++) {
+                    if (localStorage.getItem('math_' + i + '_' + j) === 'completed') {
+                        completed++;
+                    }
+                }
+            }
+            const percent = Math.round((completed / total) * 100);
+            document.getElementById('mathProgress').style.width = percent + '%';
+            document.getElementById('mathCompleted').textContent = completed + '/' + total + ' 节已完成';
+            document.getElementById('mathPercent').textContent = percent + '%';
+            return { completed, total, percent };
+        }
+        
+        // 更新英语进度
+        function updateEnglishProgress() {
+            const units = ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5', 'Unit 6'];
+            const sections = ['word2meaning', 'meaning2word', 'fillBlank', 'dictation'];
+            let totalSections = 0;
+            let completedSections = 0;
+            
+            units.forEach(unit => {
+                sections.forEach((section, index) => {
+                    totalSections++;
+                    if (localStorage.getItem('english_' + unit + '_' + index) === 'completed') {
+                        completedSections++;
+                    }
+                });
+            });
+            
+            const percent = totalSections > 0 ? Math.round((completedSections / totalSections) * 100) : 0;
+            document.getElementById('englishProgress').style.width = percent + '%';
+            document.getElementById('englishCompleted').textContent = completedSections + '/' + totalSections + ' 环节已完成';
+            document.getElementById('englishPercent').textContent = percent + '%';
+            return { completed: completedSections, total: totalSections, percent };
+        }
+        
+        // 更新总体进度
+        function updateTotalProgress() {
+            const chinese = updateChineseProgress();
+            const math = updateMathProgress();
+            const english = updateEnglishProgress();
+            const totalCompleted = chinese.completed + math.completed + english.completed;
+            const totalSections = chinese.total + math.total + english.total;
+            const totalPercent = totalSections > 0 ? Math.round((totalCompleted / totalSections) * 100) : 0;
+            
+            document.getElementById('totalCompleted').textContent = totalCompleted;
+            document.getElementById('totalSections').textContent = totalSections;
+            document.getElementById('totalProgress').textContent = totalPercent + '%';
+        }
+        
+        // 页面加载时更新进度
+        updateTotalProgress();
+    </script>
+</body>
+</html>

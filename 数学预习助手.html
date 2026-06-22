@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>数学预习助手 · 六年级上册</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+
+.header { text-align: center; color: white; margin-bottom: 30px; }
+.header h1 { font-size: 1.8em; margin-bottom: 8px; }
+.header p { font-size: 1em; opacity: 0.85; }
+
+/* 两栏固定，iPad 上也保持两栏 */
+.chapter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 900px; margin: 0 auto; }
+@media (max-width: 900px) { .chapter-grid { grid-template-columns: 1fr; } }
+
+.chapter-card { background: white; border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.chapter-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+.chapter-card.disabled { opacity: 0.55; cursor: default; pointer-events: none; }
+
+.chapter-icon { font-size: 2.2em; margin-bottom: 10px; }
+.chapter-title { font-size: 1.15em; font-weight: bold; color: #2c3e50; margin-bottom: 6px; }
+.chapter-desc { font-size: 0.88em; color: #888; margin-bottom: 12px; line-height: 1.5; }
+
+.footer { text-align: center; color: rgba(255,255,255,0.7); font-size: 0.85em; margin-top: 30px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>📐 数学预习助手</h1>
+    <p>六年级上册 · 上海教材 · 互动学习手册</p>
+</div>
+
+<div class="chapter-grid">
+
+    <div class="chapter-card" onclick="openChapter(1)">
+        <div class="chapter-icon">🔢</div>
+        <div class="chapter-title">第一章：有理数</div>
+        <div class="chapter-desc">正数与负数、数轴、相反数、绝对值、大小比较、加减乘除乘方混合运算（11节）</div>
+    </div>
+
+    <div class="chapter-card" onclick="openChapter(2)">
+        <div class="chapter-icon">🅰</div>
+        <div class="chapter-title">第二章：简单的代数式</div>
+        <div class="chapter-desc">字母表示数、代数式、代数式的值、一次式、同类项、一次式加减（7节）</div>
+    </div>
+
+    <div class="chapter-card" onclick="openChapter(3)">
+        <div class="chapter-icon">📐</div>
+        <div class="chapter-title">第三章：一元一次方程</div>
+        <div class="chapter-desc">方程概念、解法（去分母→去括号→移项→合并→系数化1）、实际应用（3节）</div>
+    </div>
+
+    <div class="chapter-card" onclick="openChapter(4)">
+        <div class="chapter-icon">📏</div>
+        <div class="chapter-title">第四章：线段与角</div>
+        <div class="chapter-desc">点与线、线段的和差与中点、角的度量、角的比较、角平分线、余角补角（6节）</div>
+    </div>
+
+</div>
+
+<div class="footer">设计理念：夯实基础 + 增加变化 · 每个知识点五层结构</div>
+
+<script>
+function openChapter(ch) {
+    if (ch === 1) window.location.href = '数学预习_第1章_有理数.html';
+    if (ch === 2) window.location.href = '数学预习_第2章_代数式.html';
+    if (ch === 3) window.location.href = '数学预习_第3章_一元一次方程.html';
+    if (ch === 4) window.location.href = '数学预习_第4章_线段与角.html';
+}
+</script>
+</body>
+</html>

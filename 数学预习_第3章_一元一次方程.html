@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3章 一元一次方程 - 数学预习助手</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+
+.container { max-width: 900px; margin: 0 auto; }
+
+/* 目录页 */
+.toc-page { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.toc-header { text-align: center; margin-bottom: 30px; }
+.toc-header h1 { color: #667eea; font-size: 32px; margin-bottom: 10px; }
+.toc-header p { color: #666; font-size: 16px; }
+
+.toc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+@media (max-width: 900px) { .toc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .toc-grid { grid-template-columns: 1fr; } }
+
+.toc-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 15px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+.toc-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5); }
+.toc-card h3 { font-size: 18px; margin-bottom: 8px; }
+.toc-card p { font-size: 13px; opacity: 0.9; }
+
+.back-btn { display: block; margin: 20px auto; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; }
+
+/* 内容页 */
+.content-page { display: none; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.content-page.active { display: block; }
+
+.section { margin-bottom: 40px; }
+.section h2 { color: #667eea; font-size: 24px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+
+.concept-box { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #667eea; }
+.concept-box h3 { color: #667eea; font-size: 18px; margin-bottom: 10px; }
+.concept-box p, .concept-box li { color: #333; font-size: 15px; line-height: 1.8; }
+
+.example-box { background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ffc107; }
+.example-box h4 { color: #856404; font-size: 16px; margin-bottom: 10px; }
+
+quiz-item { display: block; padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; }
+quiz-item:hover { border-color: #667eea; }
+
+option-btn { display: block; padding: 10px 15px; margin: 5px 0; background: white; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-size: 15px; }
+option-btn:hover { border-color: #667eea; background: #f0f0ff; }
+option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+input-answer { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px; margin: 10px 0; }
+input-answer:focus { outline: none; border-color: #667eea; }
+
+check-btn { display: inline-block; padding: 8px 20px; background: #667eea; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 14px; margin: 10px 0; }
+check-btn:hover { background: #764ba2; }
+
+feedback { display: none; padding: 10px; margin: 10px 0; border-radius: 8px; font-size: 14px; }
+feedback.correct { display: block; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+feedback.wrong { display: block; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 目录页 -->
+  <div class="toc-page" id="tocPage">
+    <div class="toc-header">
+      <h1>📐 第3章 一元一次方程</h1>
+      <p>共 3 个小节 · 每个知识点都配有即时练习</p>
+    </div>
+    
+    <div class="toc-grid">
+      <div class="toc-card" onclick="showSection('section3_1')">
+        <h3>3.1 一元一次方程</h3>
+        <p>方程的概念、一元一次方程的定义</p>
+      </div>
+      
+      <div class="toc-card" onclick="showSection('section3_2')">
+        <h3>3.2 解法</h3>
+        <p>等式的性质、解方程的步骤</p>
+      </div>
+      
+      <div class="toc-card" onclick="showSection('section3_3')">
+        <h3>3.3 应用</h3>
+        <p>行程问题、工程问题、利润问题</p>
+      </div>
+    </div>
+    
+    <button class="back-btn" onclick="goHome()">🏠 返回数学目录</button>
+  </div>
+  
+  <!-- 3.1 一元一次方程 -->
+  <div class="content-page" id="section3_1">
+    <button class="back-btn" onclick="showToc()">📋 返回目录</button>
+    
+    <div class="section">
+      <h2>3.1 一元一次方程</h2>
+      
+      <div class="concept-box">
+        <h3>📖 基础概念</h3>
+        <p><strong>方程</strong>：含有<strong>未知数</strong>的等式叫做方程。</p>
+        <p><strong>一元一次方程</strong>：只含有<strong>一个未知数</strong>，并且未知数的次数都是<strong>1</strong>的整式方程，叫做一元一次方程。</p>
+        <p><strong>标准形式</strong>：ax + b = 0（其中 a ≠ 0）</p>
+      </div>
+      
+      <div class="example-box">
+        <h4>📝 基础例题</h4>
+        <p><strong>例1：</strong>判断下列哪些是一元一次方程：</p>
+        <p>(1) 2x + 3 = 7 &nbsp;&nbsp; (2) x² - 1 = 0 &nbsp;&nbsp; (3) 1/x + 2 = 5 &nbsp;&nbsp; (4) 3y - 1 = 2y + 4</p>
+        <details>
+          <summary>👆 点击查看解析</summary>
+          <p>(1) 是（只含 x，次数 1，是整式方程）</p>
+          <p>(2) 不是（x 的次数是 2）</p>
+          <p>(3) 不是（含有 1/x，不是整式方程）</p>
+          <p>(4) 是（只含 y，次数 1）</p>
+        </details>
+      </div>
+      
+      <div class="concept-box">
+        <h3>⚠️ 易错提醒</h3>
+        <p>1. <strong>整式方程</strong>才能是一元一次方程！如果方程里含有 1/x、√x 等，就不是整式方程，也就不是一元一次方程。</p>
+        <p>2. <strong>未知数的次数必须是 1</strong>：x²=4 不是一元一次方程（次数是2）。</p>
+      </div>
+    </div>
+    
+    <!-- 即时练习 -->
+    <div class="section">
+      <h2>🎯 即时练习（3.1）</h2>
+      
+      <div class="quiz-item">
+        <p><strong>练习1：</strong>下列方程中，哪个是一元一次方程？</p>
+        <option-btn onclick="checkQuiz(this, 'B', event)">A. x² + 2x = 3</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">B. 3x - 5 = 2x + 1</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">C. 2/x = 4</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">D. x + y = 7</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习2：</strong>若方程 (m-2)x + 3 = 0 是一元一次方程，则 m 的取值范围是？</p>
+        <option-btn onclick="checkQuiz(this, 'A', event)">A. m ≠ 2</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">B. m = 2</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">C. m > 2</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">D. m < 2</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习3：</strong>下列哪些是方程？（多选）</p>
+        <option-btn onclick="checkMulti(this, ['A','C'], event)">A. 2x + 3 = 7</option-btn>
+        <option-btn onclick="checkMulti(this, ['A','C'], event)">B. 5 + 3 = 8</option-btn>
+        <option-btn onclick="checkMulti(this, ['A','C'], event)">C. x - 1 = 0</option-btn>
+        <option-btn onclick="checkMulti(this, ['A','C'], event)">D. 2x + 3</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习4：</strong>一元一次方程 2x - 6 = 0 的解是？</p>
+        <option-btn onclick="checkQuiz(this, 'C', event)">A. x = 2</option-btn>
+        <option-btn onclick="checkQuiz(this, 'C', event)">B. x = -2</option-btn>
+        <option-btn onclick="checkQuiz(this, 'C', event)">C. x = 3</option-btn>
+        <option-btn onclick="checkQuiz(this, 'C', event)">D. x = -3</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习5：</strong>下列哪些不是一元一次方程？（多选）</p>
+        <option-btn onclick="checkMulti(this, ['B','C','D'], event)">A. 5x - 1 = 9</option-btn>
+        <option-btn onclick="checkMulti(this, ['B','C','D'], event)">B. x² = 4</option-btn>
+        <option-btn onclick="checkMulti(this, ['B','C','D'], event)">C. 3/x = 6</option-btn>
+        <option-btn onclick="checkMulti(this, ['B','C','D'], event)">D. 2x + 3y = 7</option-btn>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 3.2 一元一次方程的解法 -->
+  <div class="content-page" id="section3_2">
+    <button class="back-btn" onclick="showToc()">📋 返回目录</button>
+    
+    <div class="section">
+      <h2>3.2 一元一次方程的解法</h2>
+      
+      <div class="concept-box">
+        <h3>📖 基础概念</h3>
+        <p><strong>解方程的依据</strong>：等式的性质</p>
+        <p>- 性质1：等式两边同时加上（或减去）同一个数或代数式，等式仍然成立</p>
+        <p>- 性质2：等式两边同时乘以（或除以一个不等于 0 的数），等式仍然成立</p>
+        <p><strong>解一元一次方程的步骤</strong>：</p>
+        <p>1. <strong>去分母</strong>：方程两边同乘分母的最小公倍数</p>
+        <p>2. <strong>去括号</strong>：用分配律去掉括号</p>
+        <p>3. <strong>移项</strong>：把含未知数的项移到等号一边，常数项移到另一边（移项要变号！）</p>
+        <p>4. <strong>合并同类项</strong>：化简方程</p>
+        <p>5. <strong>系数化为 1</strong>：两边同除以未知数的系数</p>
+      </div>
+      
+      <div class="example-box">
+        <h4>📝 基础例题</h4>
+        <p><strong>例2：</strong>解方程：3(x-2) + 1 = x - (2x - 1)</p>
+        <details>
+          <summary>👆 点击查看解析</summary>
+          <p>Step 1 去括号：</p>
+          <p>3x - 6 + 1 = x - 2x + 1</p>
+          <p>3x - 5 = -x + 1</p>
+          <p>Step 2 移项（把含 x 的移到左边，常数移到右边）：</p>
+          <p>3x + x = 1 + 5</p>
+          <p>Step 3 合并同类项：</p>
+          <p>4x = 6</p>
+          <p>Step 4 系数化为 1：</p>
+          <p>x = 6/4 = 3/2</p>
+        </details>
+      </div>
+      
+      <div class="concept-box">
+        <h3>⚠️ 易错提醒</h3>
+        <p>1. <strong>移项要变号</strong>！3x - 5 = -x + 1 移项后变成 3x + x = 1 + 5（不是 3x - x = 1 - 5！）</p>
+        <p>2. <strong>去分母时，每一项都要乘以最小公倍数</strong>，不能漏项！</p>
+        <p>3. 移项和去括号是最容易出错的两步，一定要慢一点。</p>
+      </div>
+    </div>
+    
+    <!-- 即时练习 -->
+    <div class="section">
+      <h2>🎯 即时练习（3.2）</h2>
+      
+      <div class="quiz-item">
+        <p><strong>练习1：</strong>解方程 2x + 5 = 13，正确的解是？</p>
+        <option-btn onclick="checkQuiz(this, 'B', event)">A. x = 3</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">B. x = 4</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">C. x = 5</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">D. x = 6</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习2：</strong>解方程 3(x - 1) = 2x + 4，去括号后正确的是？</p>
+        <option-btn onclick="checkQuiz(this, 'A', event)">A. 3x - 3 = 2x + 4</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">B. 3x - 1 = 2x + 4</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">C. 3x + 3 = 2x + 4</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">D. 3x - 3 = 2x - 4</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习3：</strong>解方程 (x-1)/2 = 3，去分母后正确的是？</p>
+        <option-btn onclick="checkQuiz(this, 'C', event)">A. x - 1 = 3</option-btn>
+        <option-btn onclick="checkQuiz(this, 'C', event)">B. x - 1 = 6</option-btn>
+        <option-btn onclick="checkQuiz(this, 'C', event)">C. 2(x-1) = 3</option-btn>
+        <option-btn onclick="checkQuiz(this, 'C', event)">D. x - 1 = 3/2</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习4：</strong>移项时，下列变形正确的是？</p>
+        <option-btn onclick="checkQuiz(this, 'B', event)">A. 由 2x + 3 = 7 得 2x = 7 + 3</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">B. 由 2x - 5 = x + 1 得 2x - x = 1 + 5</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">C. 由 3x = x - 4 得 3x - x = -4</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">D. 由 5x = 2x - 6 得 5x + 2x = -6</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习5：</strong>解方程 2(x - 1) + 1 = 3，正确的解是？</p>
+        <option-btn onclick="checkQuiz(this, 'A', event)">A. x = 2</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">B. x = 1</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">C. x = 3</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">D. x = 0</option-btn>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 3.3 一元一次方程的应用 -->
+  <div class="content-page" id="section3_3">
+    <button class="back-btn" onclick="showToc()">📋 返回目录</button>
+    
+    <div class="section">
+      <h2>3.3 一元一次方程的应用</h2>
+      
+      <div class="concept-box">
+        <h3>📖 基础概念</h3>
+        <p><strong>用方程解决实际问题的步骤</strong>：</p>
+        <p>1. <strong>审题</strong>：弄清题意，找出已知量和未知量</p>
+        <p>2. <strong>设未知数</strong>：用 x 表示所求的量</p>
+        <p>3. <strong>列方程</strong>：根据等量关系列出方程</p>
+        <p>4. <strong>解方程</strong>：求出 x 的值</p>
+        <p>5. <strong>检验并作答</strong>：检验解是否符合实际意义，然后写出答案</p>
+        <p><strong>常见等量关系</strong>：</p>
+        <p>- 行程问题：路程 = 速度 × 时间</p>
+        <p>- 工程问题：工作量 = 工作效率 × 工作时间</p>
+        <p>- 利润问题：利润 = 售价 - 成本，利润率 = 利润 ÷ 成本 × 100%</p>
+        <p>- 和差倍分问题：找准"谁是谁的几倍"、"谁比谁多多少"</p>
+      </div>
+      
+      <div class="example-box">
+        <h4>📝 基础例题</h4>
+        <p><strong>例3（行程问题）：</strong>甲、乙两人相距 30 km，甲在后，乙在前，两人同时出发同向而行。甲的速度是 8 km/h，乙的速度是 5 km/h。几小时后甲追上乙？</p>
+        <details>
+          <summary>👆 点击查看解析</summary>
+          <p>设 x 小时后甲追上乙。</p>
+          <p>等量关系：<strong>甲走的路程 = 乙走的路程 + 原来的距离</strong></p>
+          <p>8x = 5x + 30</p>
+          <p>8x - 5x = 30</p>
+          <p>3x = 30</p>
+          <p>x = 10</p>
+          <p>答：10 小时后甲追上乙。</p>
+        </details>
+      </div>
+    </div>
+    
+    <!-- 即时练习 -->
+    <div class="section">
+      <h2>🎯 即时练习（3.3）</h2>
+      
+      <div class="quiz-item">
+        <p><strong>练习1：</strong>小明买了 3 支钢笔和 2 支铅笔，一共花了 38 元。已知每支钢笔比每支铅笔贵 9 元，求钢笔和铅笔的单价各是多少元？</p>
+        <p>设铅笔单价为 x 元，则钢笔单价为 (x+9) 元。正确的方程是？</p>
+        <option-btn onclick="checkQuiz(this, 'B', event)">A. 3x + 2(x+9) = 38</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">B. 3(x+9) + 2x = 38</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">C. 3x + 2x + 9 = 38</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">D. 3(x+9) = 2x + 38</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习2：</strong>甲、乙两人相距 20 km，相向而行，甲的速度是 6 km/h，乙的速度是 4 km/h。几小时后两人相遇？</p>
+        <p>设 x 小时后相遇，正确的方程是？</p>
+        <option-btn onclick="checkQuiz(this, 'A', event)">A. 6x + 4x = 20</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">B. 6x - 4x = 20</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">C. 4x - 6x = 20</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">D. 6 + 4x = 20</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习3：</strong>一件商品按 20% 的利润定价，然后打九折出售，结果赚了 8 元。这件商品的成本是多少元？</p>
+        <p>设成本为 x 元，正确的方程是？</p>
+        <option-btn onclick="checkQuiz(this, 'C', event)">A. x(1+20%) × 0.9 = x + 8</option-btn>
+        <option-btn onclick="checkQuiz(this, 'C', event)">B. x(1+20%) × 0.9 = 8</option-btn>
+        <option-btn onclick="checkQuiz(this, 'C', event)">C. x(1+20%) × 0.9 - x = 8</option-btn>
+        <option-btn onclick="checkQuiz(this, 'C', event)">D. x × 20% × 0.9 = 8</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习4：</strong>一个工厂需要生产 120 个零件，已经生产了 5 天，每天生产 x 个，还剩 20 个没生产。正确的方程是？</p>
+        <option-btn onclick="checkQuiz(this, 'B', event)">A. 5x = 120 + 20</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">B. 5x + 20 = 120</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">C. 5x - 20 = 120</option-btn>
+        <option-btn onclick="checkQuiz(this, 'B', event)">D. 120 - 5x = 20</option-btn>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习5：</strong>甲、乙两车同时从 A、B 两地相向而行，甲车速度是 50 km/h，乙车速度是 40 km/h，3 小时后两车相遇。A、B 两地相距多少千米？</p>
+        <option-btn onclick="checkQuiz(this, 'A', event)">A. 270 km</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">B. 150 km</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">C. 120 km</option-btn>
+        <option-btn onclick="checkQuiz(this, 'A', event)">D. 90 km</option-btn>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSection = null;
+
+function showToc() {
+  document.getElementById('tocPage').style.display = 'block';
+  document.querySelectorAll('.content-page').forEach(p => p.classList.remove('active'));
+  currentSection = null;
+}
+
+function showSection(id) {
+  document.getElementById('tocPage').style.display = 'none';
+  document.querySelectorAll('.content-page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentSection = id;
+}
+
+function goHome() {
+  window.location.href = '数学预习助手.html';
+}
+
+// 选择题批改
+function checkQuiz(btn, correctAnswer, event) {
+  const allOptions = event.target.parentElement.querySelectorAll('.option-btn');
+  allOptions.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt.textContent.trim().startsWith(correctAnswer + '.')) {
+      opt.classList.add('correct');
+    }
+  });
+  
+  if (!btn.textContent.trim().startsWith(correctAnswer + '.')) {
+    btn.classList.add('wrong');
+  }
+}
+
+// 多选题批改
+function checkMulti(btn, correctAnswers, event) {
+  alert('正确答案：' + correctAnswers.join(', '));
+}
+
+// 初始化
+showToc();
+</script>
+
+</body>
+</html>
