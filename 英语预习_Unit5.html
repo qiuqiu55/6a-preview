@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 5 · Animals and Us · 英语预习助手</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background:#f0f2f5; min-height:100vh; }
+
+.header { background:linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color:white; padding:14px 20px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+.back-btn { background:rgba(255,255,255,0.2); border:none; color:white; font-size:1.3em; padding:6px 12px; border-radius:8px; cursor:pointer; text-decoration:none; display:inline-block; }
+.back-btn:hover { background:rgba(255,255,255,0.3); }
+.header h1 { font-size:1.15em; font-weight:600; }
+.header p { font-size:0.82em; opacity:0.9; margin-top:2px; }
+
+.toc-page { max-width:900px; margin:0 auto; padding:24px 20px; display:block; }
+.content-page { display:none; max-width:900px; margin:0 auto; padding:20px; }
+.section-title { font-size:1.25em; font-weight:700; color:#333; margin-bottom:16px; padding-bottom:8px; border-bottom:3px solid #4facfe; }
+
+.vocab-table { width:100%; border-collapse:collapse; background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08); margin-bottom:20px; font-size:0.9em; }
+.vocab-table th { background:linear-gradient(135deg,#4facfe,#00f2fe); color:white; padding:10px 12px; text-align:left; }
+.vocab-table td { padding:9px 12px; border-bottom:1px solid #f0f0f0; }
+.vocab-table tr:nth-child(even){background:#f8f9fa;}
+.vocab-table tr:hover{background:#eef0ff;}
+
+.back-area { text-align:center; margin-top:18px; }
+.back-btn2 { display:inline-block; padding:10px 24px; border-radius:10px; border:2px solid #4facfe; background:white; color:#4facfe; font-size:0.95em; font-weight:600; cursor:pointer; text-decoration:none; transition:all 0.15s; }
+.back-btn2:hover { background:#4facfe; color:white; }
+
+/* Flashcard */
+.flashcard-area { background:white; border-radius:16px; padding:28px 20px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.08); text-align:center; }
+.flashcard-progress { font-size:0.85em; color:#999; margin-bottom:8px; }
+.flashcard-word { font-size:2em; font-weight:800; color:#4facfe; margin:16px 0 6px 0; }
+.flashcard-pos { font-size:0.85em; color:#999; margin-bottom:18px; }
+.flashcard-opts { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+@media(max-width:500px){ .flashcard-opts{grid-template-columns:1fr;} }
+.flashcard-opt { padding:14px 10px; border-radius:12px; border:2px solid #e0e0e0; background:white; font-size:1em; cursor:pointer; transition:all 0.15s; }
+.flashcard-opt:hover { border-color:#4facfe; background:#f0f2ff; }
+.flashcard-opt.correct { border-color:#4caf50; background:#e8f5e9; color:#2e7d32; font-weight:700; }
+.flashcard-opt.wrong { border-color:#ef5350; background:#ffebee; color:#c62828; }
+.flashcard-opt.disabled { pointer-events:none; opacity:0.6; }
+.flashcard-feedback { font-size:0.95em; font-weight:600; margin-bottom:14px; min-height:1.4em; }
+.flashcard-feedback.correct { color:#4caf50; }
+.flashcard-feedback.wrong { color:#ef5350; }
+.flashcard-next { padding:10px 28px; border-radius:10px; border:none; background:linear-gradient(135deg,#4facfe,#00f2fe); color:white; font-size:1em; font-weight:600; cursor:pointer; margin-top:10px; }
+.flashcard-score { font-size:0.9em; color:#555; margin-top:12px; }
+
+/* Grammar */
+.grammar-content { background:white; border-radius:14px; padding:22px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:0.9em; line-height:1.8; }
+.grammar-quiz-area { background:white; border-radius:16px; padding:28px 20px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.08); text-align:center; }
+.gq-question { font-size:1.1em; font-weight:600; color:#333; margin-bottom:18px; }
+.gq-opts { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+@media(max-width:500px){ .gq-opts{grid-template-columns:1fr;} }
+.gq-opt { padding:12px 10px; border-radius:12px; border:2px solid #e0e0e0; background:white; font-size:1em; cursor:pointer; transition:all 0.15s; }
+.gq-opt:hover { border-color:#4facfe; background:#f0f2ff; }
+.gq-opt.correct { border-color:#4caf50; background:#e8f5e9; color:#2e7d32; font-weight:700; }
+.gq-opt.wrong { border-color:#ef5350; background:#ffebee; color:#c62828; }
+.gq-opt.disabled { pointer-events:none; opacity:0.6; }
+.gq-feedback { font-size:0.95em; font-weight:600; margin-bottom:14px; min-height:1.4em; }
+.gq-feedback.correct { color:#4caf50; }
+.gq-feedback.wrong { color:#ef5350; }
+.gq-next { padding:10px 28px; border-radius:10px; border:none; background:linear-gradient(135deg,#4facfe,#00f2fe); color:white; font-size:1em; font-weight:600; cursor:pointer; margin-top:10px; }
+.gq-score { font-size:0.9em; color:#555; margin-top:12px; }
+
+/* TOC Grid */
+.toc-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:20px; }
+@media(max-width:600px){ .toc-grid{grid-template-columns:1fr 1fr;} }
+.toc-card { background:white; border-radius:14px; padding:22px 18px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.08); cursor:pointer; transition:all 0.2s; border:2px solid transparent; }
+.toc-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(102,126,234,0.18); border-color:#4facfe; }
+.toc-card .icon { font-size:2em; margin-bottom:8px; }
+.toc-card .title { font-size:1.05em; font-weight:700; color:#333; margin-bottom:6px; }
+.toc-card .subtitle { font-size:0.82em; color:#999; }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <button class="back-btn" onclick="goBackToMain()" style="background:rgba(255,255,255,0.2);border:none;color:white;font-size:1.3em;padding:6px 12px;border-radius:8px;cursor:pointer;">←</button>
+    <div>
+        <h1>Unit 5 · Animals and Us</h1>
+        <p>How can we get around and explore China?</p>
+    </div>
+</div>
+
+<!-- TOC Page -->
+<div class="toc-page" id="tocPage">
+    <div class="toc-grid">
+        <div class="toc-card" onclick="showPage('vocabPage')">
+            <div class="icon">📖</div>
+            <div class="title">核心词汇</div>
+            <div class="subtitle">36 个 · 熟读记忆</div>
+        </div>
+        <div class="toc-card" onclick="startFlashcard('en2cn')">
+            <div class="icon">✏️</div>
+            <div class="title">英译中 · 四选一</div>
+            <div class="subtitle">36 词 · 互动卡片</div>
+        </div>
+        <div class="toc-card" onclick="startFlashcard('cn2en')">
+            <div class="icon">🔤</div>
+            <div class="title">中译英 · 四选一</div>
+            <div class="subtitle">36 词 · 互动卡片</div>
+        </div>
+        <div class="toc-card" onclick="showPage('grammarPage')">
+            <div class="icon">📘</div>
+            <div class="title">语法讲解</div>
+            <div class="subtitle">疑问词how/when/where/why</div>
+        </div>
+        <div class="toc-card" onclick="startGrammarQuiz()">
+            <div class="icon">📝</div>
+            <div class="title">语法练习</div>
+            <div class="subtitle">10 题 · 巩固提升</div>
+        </div>
+    </div>
+</div>
+
+<!-- Vocab Page -->
+<div class="content-page" id="vocabPage">
+    <div class="section-title">📖 核心词汇（36个）</div>
+    <table class="vocab-table">
+  <tr><th>单词</th><th>词性</th><th>释义</th></tr>
+  <tr><td><strong>amazing</strong></td><td>adj</td><td>令人大为惊奇的；令人惊喜或惊叹的</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>website</strong></td><td>n</td><td>网站</td></tr>
+  <tr><td><strong>feed</strong></td><td>v</td><td>给（人或动物）食物；喂养</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>herd</strong></td><td>v</td><td>牧放（牲畜、兽群）</td></tr>
+  <tr><td><strong>goat</strong></td><td>n</td><td>山羊</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>remember</strong></td><td>v</td><td>记得；记起</td></tr>
+  <tr><td><strong>collect</strong></td><td>v</td><td>收集；采集</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>recognise (AmE recognize)</strong></td><td>v</td><td>识别；认出</td></tr>
+  <tr><td><strong>care</strong></td><td>n</td><td>照顾；照看</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>prefer</strong></td><td>v</td><td>较喜欢；喜欢……多于……</td></tr>
+  <tr><td><strong>sign</strong></td><td>n</td><td>标牌；指示牌</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>bite</strong></td><td>v</td><td>咬 n. 咬；咬下的一口</td></tr>
+  <tr><td><strong>warning</strong></td><td>n</td><td>警告；警示</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>peck</strong></td><td>v</td><td>啄</td></tr>
+  <tr><td><strong>sweet</strong></td><td>adj</td><td>含糖的；甜的n. 糖果</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>calf</strong></td><td>n</td><td>小牛；牛犊</td></tr>
+  <tr><td><strong>loud</strong></td><td>adj</td><td>大声的；喧闹的</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>noise</strong></td><td>n</td><td>噪音；响声</td></tr>
+  <tr><td><strong>meaning</strong></td><td>n</td><td>意义；意思</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>shout</strong></td><td>v</td><td>大声说；叫</td></tr>
+  <tr><td><strong>jacket</strong></td><td>n</td><td>夹克衫；短上衣</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>if</strong></td><td>conj</td><td>如果；假若</td></tr>
+  <tr><td><strong>snack</strong></td><td>n</td><td>点心；小吃</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>could</strong></td><td>modal v. (</td><td>询问是否可以做某事) 能；可以</td></tr>
+  <tr><td><strong>hen</strong></td><td>n</td><td>母鸡</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>diary</strong></td><td>n</td><td>日记；日记簿</td></tr>
+  <tr><td><strong>cookie</strong></td><td>n</td><td>曲奇饼</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>direct</strong></td><td>v</td><td>指路；领路</td></tr>
+  <tr><td><strong>yard</strong></td><td>n. (</td><td>某种用途的) 区域，场地</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>glad</strong></td><td>adj</td><td>高兴；愉快</td></tr>
+  <tr><td><strong>believe</strong></td><td>v</td><td>相信</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>unforgettable</strong></td><td>adj</td><td>令人难忘的</td></tr>
+  <tr><td><strong>smooth</strong></td><td>adj</td><td>光滑的；平坦的；平整的</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>neck</strong></td><td>n</td><td>颈；脖子</td></tr>
+  <tr><td><strong>friendly</strong></td><td>adj</td><td>友爱的；友好的</td></tr>
+  <tr style="background:#f8f9fa;"><td><strong>ride</strong></td><td>v</td><td>骑马；驾驶 n. (乘车或骑车的) 短途旅程</td></tr>
+</table>
+    <div class="back-area"><button class="back-btn2" onclick="showPage('tocPage')">← 返回目录</button></div>
+</div>
+
+<!-- Flashcard Page -->
+<div class="content-page" id="flashcardPage">
+    <div id="flashcardTitle" style="font-size:1.1em;font-weight:700;color:#333;margin-bottom:16px;"></div>
+    <div class="flashcard-area" id="flashcardArea"></div>
+    <div class="back-area"><button class="back-btn2" onclick="showPage('tocPage')">← 返回目录</button></div>
+</div>
+
+<!-- Grammar Page -->
+<div class="content-page" id="grammarPage">
+    <div class="section-title">📘 语法讲解</div>
+    <div class="grammar-content">
+
+        <h3 style="color:#4facfe;margin:18px 0 10px 0;">疑问词 how、when、where、why</h3>
+        <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:0.88em;">
+            <tr style="background:#4facfe;color:white;"><th style="padding:8px 12px;text-align:center;">疑问词</th><th style="padding:8px 12px;text-align:center;">助动词</th><th style="padding:8px 12px;text-align:center;">主语</th><th style="padding:8px 12px;text-align:center;">动词</th><th style="padding:8px 12px;text-align:center;">其他</th></tr>
+            <tr><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">How</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">does</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">Uncle Lin</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">milk</td><td style="padding:8px 12px;border:1px solid #ddd;">cows?</td></tr>
+            <tr style="background:#f8f9fa;"><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">When</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">do</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">bats</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">sleep</td><td style="padding:8px 12px;border:1px solid #ddd;">?</td></tr>
+            <tr><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">Where</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">do</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">ants</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">build</td><td style="padding:8px 12px;border:1px solid #ddd;">their homes?</td></tr>
+            <tr style="background:#f8f9fa;"><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">Why</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">do</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">hens</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">peck</td><td style="padding:8px 12px;border:1px solid #ddd;">people?</td></tr>
+        </table>
+        <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:0.88em;">
+            <tr style="background:#4facfe;color:white;"><th style="padding:8px 12px;text-align:center;">疑问词</th><th style="padding:8px 12px;text-align:center;">be 动词</th><th style="padding:8px 12px;text-align:center;">主语</th><th style="padding:8px 12px;text-align:center;">其他</th></tr>
+            <tr><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">How</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">are</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">dogs</td><td style="padding:8px 12px;border:1px solid #ddd;">different from cats?</td></tr>
+            <tr style="background:#f8f9fa;"><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">When</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">is</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">World Animal Day</td><td style="padding:8px 12px;border:1px solid #ddd;">?</td></tr>
+            <tr><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">Where</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">is</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">the horse</td><td style="padding:8px 12px;border:1px solid #ddd;">?</td></tr>
+            <tr style="background:#f8f9fa;"><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">Why</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">are</td><td style="padding:8px 12px;border:1px solid #ddd;text-align:center;">animals</td><td style="padding:8px 12px;border:1px solid #ddd;">important to us?</td></tr>
+        </table>
+        <p style="margin:8px 0;line-height:1.8;font-size:0.9em;">1. <strong>when</strong> 用于询问时间或日期。<br>e.g. When do they feed animals every day?</p>
+        <p style="margin:8px 0;line-height:1.8;font-size:0.9em;">2. <strong>where</strong> 用于询问地点或方位。<br>e.g. Where are the goats?</p>
+        <p style="margin:8px 0;line-height:1.8;font-size:0.9em;">3. <strong>why</strong> 用于询问原因。<br>e.g. Why do pigs roll in the mud?</p>
+        <p style="margin:8px 0;line-height:1.8;font-size:0.9em;">4. <strong>how</strong> 用于询问事物发生的方式。<br>e.g. How do pigeons find their way home?</p>
+        <p style="margin:8px 0;line-height:1.8;font-size:0.9em;">5. <strong>how + 形容词/副词</strong> 用于询问程度。<br>e.g. How far is the goat yard? How long can elephants live? How often do you walk your dog? How many goats does Uncle Lin have? How much milk does a cow produce in a day?</p>
+
+    </div>
+    <div class="back-area"><button class="back-btn2" onclick="showPage('tocPage')">← 返回目录</button></div>
+</div>
+
+<!-- Grammar Quiz Page -->
+<div class="content-page" id="grammarQuiz">
+    <div class="section-title">📝 语法练习</div>
+    <div class="grammar-quiz-area" id="gqContainer"></div>
+    <div class="back-area"><button class="back-btn2" onclick="showPage('tocPage')">← 返回目录</button></div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const VOCAB = [
+    { word: 'amazing', pos: 'adj', meaning: '令人大为惊奇的；令人惊喜或惊叹的' },
+    { word: 'website', pos: 'n', meaning: '网站' },
+    { word: 'feed', pos: 'v', meaning: '给（人或动物）食物；喂养' },
+    { word: 'herd', pos: 'v', meaning: '牧放（牲畜、兽群）' },
+    { word: 'goat', pos: 'n', meaning: '山羊' },
+    { word: 'remember', pos: 'v', meaning: '记得；记起' },
+    { word: 'collect', pos: 'v', meaning: '收集；采集' },
+    { word: 'recognise (AmE recognize)', pos: 'v', meaning: '识别；认出' },
+    { word: 'care', pos: 'n', meaning: '照顾；照看' },
+    { word: 'prefer', pos: 'v', meaning: '较喜欢；喜欢……多于……' },
+    { word: 'sign', pos: 'n', meaning: '标牌；指示牌' },
+    { word: 'bite', pos: 'v', meaning: '咬 n. 咬；咬下的一口' },
+    { word: 'warning', pos: 'n', meaning: '警告；警示' },
+    { word: 'peck', pos: 'v', meaning: '啄' },
+    { word: 'sweet', pos: 'adj', meaning: '含糖的；甜的n. 糖果' },
+    { word: 'calf', pos: 'n', meaning: '小牛；牛犊' },
+    { word: 'loud', pos: 'adj', meaning: '大声的；喧闹的' },
+    { word: 'noise', pos: 'n', meaning: '噪音；响声' },
+    { word: 'meaning', pos: 'n', meaning: '意义；意思' },
+    { word: 'shout', pos: 'v', meaning: '大声说；叫' },
+    { word: 'jacket', pos: 'n', meaning: '夹克衫；短上衣' },
+    { word: 'if', pos: 'conj', meaning: '如果；假若' },
+    { word: 'snack', pos: 'n', meaning: '点心；小吃' },
+    { word: 'could', pos: 'modal v. (', meaning: '询问是否可以做某事) 能；可以' },
+    { word: 'hen', pos: 'n', meaning: '母鸡' },
+    { word: 'diary', pos: 'n', meaning: '日记；日记簿' },
+    { word: 'cookie', pos: 'n', meaning: '曲奇饼' },
+    { word: 'direct', pos: 'v', meaning: '指路；领路' },
+    { word: 'yard', pos: 'n. (', meaning: '某种用途的) 区域，场地' },
+    { word: 'glad', pos: 'adj', meaning: '高兴；愉快' },
+    { word: 'believe', pos: 'v', meaning: '相信' },
+    { word: 'unforgettable', pos: 'adj', meaning: '令人难忘的' },
+    { word: 'smooth', pos: 'adj', meaning: '光滑的；平坦的；平整的' },
+    { word: 'neck', pos: 'n', meaning: '颈；脖子' },
+    { word: 'friendly', pos: 'adj', meaning: '友爱的；友好的' },
+    { word: 'ride', pos: 'v', meaning: '骑马；驾驶 n. (乘车或骑车的) 短途旅程' }
+  ];
+
+const GRAMMAR_Q = [
+    {"q":"You like travelling, _____ you?", "opts":["don't", "do", "aren't", "are"], "answer":0, "explanation":"肯定陈述句，附加问句用否定：don't you"},
+    {"q":"It is a beautiful place, _____ it?", "opts":["is", "isn't", "does", "doesn't"], "answer":1, "explanation":"肯定陈述句（be动词），附加问句用否定：isn't it"},
+    {"q":"We can go there, _____ we?", "opts":["can", "can't", "do", "don't"], "answer":1, "explanation":"肯定陈述句（can），附加问句用否定：can't we"},
+    {"q":"You aren't going there, _____ you?", "opts":["are", "aren't", "do", "don't"], "answer":0, "explanation":"否定陈述句，附加问句用肯定：are you"},
+    {"q":"I am going to visit China, _____ I?", "opts":["am not", "aren't", "don't", "won't"], "answer":0, "explanation":"I am 的附加疑问句用 aren't I（正式）或 am I not"},
+    {"q":"They will come, _____ they?", "opts":["won't", "will", "don't", "aren't"], "answer":0, "explanation":"肯定陈述句（will），附加问句用否定：won't they"},
+    {"q":"She has been there, _____ she?", "opts":["hasn't", "has", "doesn't", "isn't"], "answer":0, "explanation":"肯定陈述句（has），附加问句用否定：hasn't she"},
+    {"q":"Let's go to the park, _____?", "opts":["shall we", "will we", "do we", "don't we"], "answer":0, "explanation":"Let's 开头的祈使句，附加问句用 shall we"},
+    {"q":"He won't come, _____ he?", "opts":["will", "won't", "does", "doesn't"], "answer":0, "explanation":"否定陈述句（won't），附加问句用肯定：will he"},
+    {"q":"You are going to travel, _____ you?", "opts":["aren't", "are", "don't", "do"], "answer":0, "explanation":"肯定陈述句（are），附加问句用否定：aren't you"}
+];
+
+// ===================== NAVIGATION =====================
+function goBackToMain() {
+    // 使用相对路径，确保能找到主页
+    window.location.href = './英语预习助手.html';
+}
+
+function showPage(id) {
+    // 隐藏所有页面
+    document.getElementById('tocPage').style.display = 'none';
+    document.querySelectorAll('.content-page').forEach(p => p.style.display = 'none');
+    
+    // 显示目标页面
+    if (id === 'tocPage') {
+        document.getElementById('tocPage').style.display = 'block';
+    } else {
+        document.getElementById(id).style.display = 'block';
+    }
+    
+    window.scrollTo(0, 0);
+}
+
+// ===================== FLASHCARD =====================
+let currentMode = 'en2cn';
+let currentVocab = [];
+let flashcardIndex = 0;
+let flashcardScore = 0;
+let flashcardAnswered = 0;
+
+function startFlashcard(mode) {
+    currentMode = mode;
+    currentVocab = VOCAB;
+    flashcardIndex = 0;
+    flashcardScore = 0;
+    flashcardAnswered = 0;
+    showPage('flashcardPage');
+    document.getElementById('flashcardTitle').textContent = mode === 'en2cn' ? '✏️ 英译中 · 四选一' : '🔤 中译英 · 四选一';
+    renderFlashcard();
+}
+
+function renderFlashcard() {
+    const area = document.getElementById('flashcardArea');
+    const total = currentVocab.length;
+    
+    if (flashcardIndex >= total) {
+        area.innerHTML = `
+            <div style="font-size:1.2em;font-weight:700;color:#4facfe;margin-bottom:12px;">🎉 练习完成！</div>
+            <div style="font-size:1em;color:#555;margin-bottom:18px;">得分：${flashcardScore} / ${total}</div>
+            <button class="flashcard-next" onclick="startFlashcard(currentMode)">🔄 再来一次</button>
+        `;
+        return;
+    }
+    
+    const item = currentVocab[flashcardIndex];
+    let question, correctAnswer, options;
+    
+    if (currentMode === 'en2cn') {
+        question = item.word;
+        correctAnswer = item.meaning;
+        let wrongAnswers = currentVocab.filter((v, i) => i !== flashcardIndex).map(v => v.meaning);
+        wrongAnswers = wrongAnswers.sort(() => Math.random() - 0.5).slice(0, 3);
+        options = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+    } else {
+        question = item.meaning;
+        correctAnswer = item.word;
+        let wrongAnswers = currentVocab.filter((v, i) => i !== flashcardIndex).map(v => v.word);
+        wrongAnswers = wrongAnswers.sort(() => Math.random() - 0.5).slice(0, 3);
+        options = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+    }
+    
+    area.innerHTML = `
+        <div class="flashcard-progress">第 ${flashcardIndex + 1} / ${total} 题</div>
+        <div class="flashcard-word">${question}</div>
+        <div class="flashcard-pos">${currentMode === 'en2cn' ? '选择正确的中文释义' : '选择正确的英文单词'}</div>
+        <div class="flashcard-opts">
+            ${options.map((opt, i) => `
+                <button class="flashcard-opt" onclick="checkFlashcard(${i}, ${options.indexOf(correctAnswer)}, '${correctAnswer.replace(/'/g, "\\'")}')">${opt}</button>
+            `).join('')}
+        </div>
+        <div class="flashcard-feedback" id="flashcardFeedback"></div>
+        <button class="flashcard-next" id="flashcardNext" style="display:none;" onclick="nextFlashcard()">下一题 →</button>
+        <div class="flashcard-score">得分：${flashcardScore} / ${flashcardAnswered}</div>
+    `;
+}
+
+function checkFlashcard(selectedIndex, correctIndex, correctAnswer) {
+    if (flashcardAnswered > flashcardIndex) return;
+    
+    const opts = document.querySelectorAll('.flashcard-opt');
+    const feedback = document.getElementById('flashcardFeedback');
+    const nextBtn = document.getElementById('flashcardNext');
+    
+    opts.forEach(opt => opt.classList.add('disabled'));
+    flashcardAnswered++;
+    
+    if (selectedIndex === correctIndex) {
+        opts[selectedIndex].classList.add('correct');
+        feedback.textContent = '✅ 正确！';
+        feedback.className = 'flashcard-feedback correct';
+        flashcardScore++;
+    } else {
+        opts[selectedIndex].classList.add('wrong');
+        opts[correctIndex].classList.add('correct');
+        feedback.textContent = `❌ 错误！正确答案是：${correctAnswer}`;
+        feedback.className = 'flashcard-feedback wrong';
+    }
+    
+    nextBtn.style.display = 'inline-block';
+}
+
+function nextFlashcard() {
+    flashcardIndex++;
+    renderFlashcard();
+}
+
+// ===================== GRAMMAR QUIZ =====================
+let gqIndex = 0;
+let gqScore = 0;
+
+function startGrammarQuiz() {
+    gqIndex = 0;
+    gqScore = 0;
+    showPage('grammarQuiz');
+    renderGrammarQuestion();
+}
+
+function renderGrammarQuestion() {
+    const container = document.getElementById('gqContainer');
+    const total = GRAMMAR_Q.length;
+    
+    if (gqIndex >= total) {
+        container.innerHTML = `
+            <div style="text-align:center;padding:40px 20px;">
+                <div style="font-size:1.2em;font-weight:700;color:#4facfe;margin-bottom:12px;">🎉 练习完成！</div>
+                <div style="font-size:1em;color:#555;">得分：${gqScore} / ${total}</div>
+            </div>
+        `;
+        return;
+    }
+    
+    const q = GRAMMAR_Q[gqIndex];
+    
+    container.innerHTML = `
+        <div class="gq-question">第 ${gqIndex + 1} 题：${q.q}</div>
+        <div class="gq-opts">
+            ${q.opts.map((opt, i) => `
+                <button class="gq-opt" onclick="checkGrammar(${i}, ${q.answer}, '${q.explanation.replace(/'/g, "\\'")}')">${opt}</button>
+            `).join('')}
+        </div>
+        <div class="gq-feedback" id="gqFeedback"></div>
+        <button class="gq-next" id="gqNext" style="display:none;" onclick="nextGrammar()">下一题 →</button>
+        <div class="gq-score">得分：${gqScore} / ${gqIndex + 1}</div>
+    `;
+}
+
+function checkGrammar(selectedIndex, correctIndex, explanation) {
+    const opts = document.querySelectorAll('.gq-opt');
+    const feedback = document.getElementById('gqFeedback');
+    const nextBtn = document.getElementById('gqNext');
+    
+    opts.forEach(opt => opt.classList.add('disabled'));
+    
+    if (selectedIndex === correctIndex) {
+        opts[selectedIndex].classList.add('correct');
+        feedback.textContent = '✅ 正确！';
+        feedback.className = 'gq-feedback correct';
+        gqScore++;
+    } else {
+        opts[selectedIndex].classList.add('wrong');
+        opts[correctIndex].classList.add('correct');
+        feedback.textContent = `❌ 错误！${explanation}`;
+        feedback.className = 'gq-feedback wrong';
+    }
+    
+    nextBtn.style.display = 'inline-block';
+}
+
+function nextGrammar() {
+    gqIndex++;
+    renderGrammarQuestion();
+}
+</script>
+
+</body>
+</html>

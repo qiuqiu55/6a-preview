@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4章 线段与角 - 数学预习助手</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+
+.container { max-width: 900px; margin: 0 auto; }
+
+/* 目录页 */
+.toc-page { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.toc-header { text-align: center; margin-bottom: 30px; }
+.toc-header h1 { color: #667eea; font-size: 32px; margin-bottom: 10px; }
+.toc-header p { color: #666; font-size: 16px; }
+
+.toc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+@media (max-width: 900px) { .toc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .toc-grid { grid-template-columns: 1fr; } }
+
+.toc-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 15px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+.toc-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5); }
+.toc-card h3 { font-size: 18px; margin-bottom: 8px; }
+.toc-card p { font-size: 13px; opacity: 0.9; }
+
+.back-btn { display: block; margin: 20px auto; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; }
+
+/* 内容页 */
+.content-page { display: none; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.content-page.active { display: block; }
+
+.section { margin-bottom: 40px; }
+.section h2 { color: #667eea; font-size: 24px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+
+.concept-box { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #667eea; }
+.concept-box h3 { color: #667eea; font-size: 18px; margin-bottom: 10px; }
+.concept-box p, .concept-box li { color: #333; font-size: 15px; line-height: 1.8; }
+
+.example-box { background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ffc107; }
+.example-box h4 { color: #856404; font-size: 16px; margin-bottom: 10px; }
+
+.quiz-item { display: block; padding: 15px; margin: 10px 0; background: #f8f9fa; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; }
+.quiz-item:hover { border-color: #667eea; }
+
+.option-btn { display: block; padding: 10px 15px; margin: 5px 0; background: white; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-size: 15px; }
+.option-btn:hover { border-color: #667eea; background: #f0f0ff; }
+.option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+.option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+.input-answer { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px; margin: 10px 0; }
+.input-answer:focus { outline: none; border-color: #667eea; }
+
+.check-btn { display: inline-block; padding: 8px 20px; background: #667eea; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 14px; margin: 10px 0; }
+.check-btn:hover { background: #764ba2; }
+
+.feedback { display: none; padding: 10px; margin: 10px 0; border-radius: 8px; font-size: 14px; }
+.feedback.correct { display: block; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.feedback.wrong { display: block; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 目录页 -->
+  <div class="toc-page" id="tocPage">
+    <div class="toc-header">
+      <h1>📐 第4章 线段与角</h1>
+      <p>共 6 个小节 · 每个知识点都配有即时练习</p>
+    </div>
+    
+    <div class="toc-grid">
+      <div class="toc-card" onclick="showSection('section4_1')">
+        <h3>4.1 点与线</h3>
+        <p>直线、射线、线段的概念</p>
+      </div>
+      
+      <div class="toc-card" onclick="showSection('section4_2')">
+        <h3>4.2 线段的和差与中点</h3>
+        <p>线段的中点、和差计算</p>
+      </div>
+      
+      <div class="toc-card" onclick="showSection('section4_3')">
+        <h3>4.3 角及其度量</h3>
+        <p>角的分类、度分秒换算</p>
+      </div>
+      
+      <div class="toc-card" onclick="showSection('section4_4')">
+        <h3>4.4 角的比较与应用</h3>
+        <p>角的大小比较、角平分线</p>
+      </div>
+      
+      <div class="toc-card" onclick="showSection('section4_5')">
+        <h3>4.5 角的和差与平分线</h3>
+        <p>角的和差、角平分线性质</p>
+      </div>
+      
+      <div class="toc-card" onclick="showSection('section4_6')">
+        <h3>4.6 余角、补角</h3>
+        <p>余角、补角的定义和性质</p>
+      </div>
+    </div>
+    
+    <button class="back-btn" onclick="goHome()">🏠 返回数学目录</button>
+  </div>
+  
+  <!-- 4.1 点与线 -->
+  <div class="content-page" id="section4_1">
+    <button class="back-btn" onclick="showToc()">📋 返回目录</button>
+    
+    <div class="section">
+      <h2>4.1 点与线</h2>
+      
+      <div class="concept-box">
+        <h3>📖 基础概念</h3>
+        <p><strong>直线</strong>：没有端点，可以向两端无限延伸，不可度量长度。</p>
+        <p><strong>射线</strong>：有一个端点，向一端无限延伸，不可度量长度。</p>
+        <p><strong>线段</strong>：有两个端点，不可延伸，可以度量长度。</p>
+        <p><strong>两点确定一条直线</strong>：经过两点有且只有一条直线。</p>
+        <p><strong>两点之间，线段最短</strong>：连接两点的所有线中，线段最短（这个长度叫做两点之间的距离）。</p>
+      </div>
+      
+      <div class="example-box">
+        <h4>📝 基础例题</h4>
+        <p><strong>例1：</strong>经过 3 个点中的每两个点画直线，最多可以画几条？</p>
+        <details>
+          <summary>👆 点击查看解析</summary>
+          <p>分情况：</p>
+          <p>- 如果 3 个点在同一条直线上：只能画 1 条</p>
+          <p>- 如果 3 个点不在同一条直线上：可以画 3 条（每两个点确定一条）</p>
+          <p>答：最多可以画 3 条。</p>
+        </details>
+      </div>
+    </div>
+    
+    <!-- 即时练习 -->
+    <div class="section">
+      <h2>🎯 即时练习（4.1）</h2>
+      
+      <div class="quiz-item">
+        <p><strong>练习1：</strong>下列说法正确的是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 直线比射线长</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 两点之间，线段最短</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 射线有一个端点，可以度量长度</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 直线有两个端点</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习2：</strong>经过两点可以画几条直线？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">A. 1条</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">B. 2条</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">C. 3条</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">D. 无数条</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习3：</strong>下列说法正确的是？（多选）</p>
+        <div class="option-btn" onclick="checkMulti(this, ['A','C'], event)">A. 线段AB和线段BA是同一条线段</div>
+        <div class="option-btn" onclick="checkMulti(this, ['A','C'], event)">B. 射线AB和射线BA是同一条射线</div>
+        <div class="option-btn" onclick="checkMulti(this, ['A','C'], event)">C. 直线AB和直线BA是同一条直线</div>
+        <div class="option-btn" onclick="checkMulti(this, ['A','C'], event)">D. 射线有一个端点，可以度量长度</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习4：</strong>经过 4 个点（无三点共线）中的每两个点画直线，最多可以画几条？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'D', event)">A. 4条</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'D', event)">B. 5条</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'D', event)">C. 4条</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'D', event)">D. 6条</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习5：</strong>下列说法正确的是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">A. 直线比线段长</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">B. 射线比线段长</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">C. 直线和射线都不能度量长度</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">D. 两点确定一条射线</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 4.2 线段的和、差与线段的中点 -->
+  <div class="content-page" id="section4_2">
+    <button class="back-btn" onclick="showToc()">📋 返回目录</button>
+    
+    <div class="section">
+      <h2>4.2 画线段的和、差与线段的中点</h2>
+      
+      <div class="concept-box">
+        <h3>📖 基础概念</h3>
+        <p><strong>线段的中点</strong>：把一条线段分成两条相等线段的点，叫做这条线段的中点。</p>
+        <p>如果 M 是 AB 的中点，那么 AM = MB = 1/2AB。</p>
+        <p><strong>线段的和</strong>：AC = AB + BC（B 在线段 AC 上）</p>
+        <p><strong>线段的差</strong>：AB = AC - BC</p>
+      </div>
+      
+      <div class="example-box">
+        <h4>📝 基础例题</h4>
+        <p><strong>例2：</strong>已知：点 M 是线段 AB 的中点，AB = 12 cm，求 AM 和 MB 的长度。</p>
+        <details>
+          <summary>👆 点击查看解析</summary>
+          <p>因为 M 是 AB 的中点，所以：</p>
+          <p>AM = MB = 1/2 × AB = 1/2 × 12 = 6 cm</p>
+        </details>
+      </div>
+    </div>
+    
+    <!-- 即时练习 -->
+    <div class="section">
+      <h2>🎯 即时练习（4.2）</h2>
+      
+      <div class="quiz-item">
+        <p><strong>练习1：</strong>点 M 是线段 AB 的中点，AB = 10 cm，则 AM 的长度是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 3 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 5 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 10 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 20 cm</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习2：</strong>点 C 在线段 AB 上，AC = 5 cm，CB = 3 cm，则 AB 的长度是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">A. 8 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">B. 2 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">C. 5 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">D. 15 cm</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习3：</strong>点 M 是线段 AB 的中点，AM = 4 cm，则 AB 的长度是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">A. 2 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">B. 4 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">C. 8 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">D. 16 cm</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习4：</strong>点 C 是线段 AB 的中点，点 D 是线段 AC 的中点，已知 AB = 12 cm，则 CD 的长度是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 2 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 3 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 4 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 6 cm</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习5：</strong>点 P 在线段 MN 的延长线上，MP = 10 cm，PN = 3 cm，则 MN 的长度是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">A. 7 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">B. 10 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">C. 13 cm</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">D. 3 cm</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 4.3 角及其度量 -->
+  <div class="content-page" id="section4_3">
+    <button class="back-btn" onclick="showToc()">📋 返回目录</button>
+    
+    <div class="section">
+      <h2>4.3 角及其度量</h2>
+      
+      <div class="concept-box">
+        <h3>📖 基础概念</h3>
+        <p><strong>角的定义</strong>：由两条有公共端点的射线组成的图形叫做角。</p>
+        <p><strong>角的度量单位</strong>：1° = 60'（分），1' = 60''（秒）。</p>
+        <p><strong>角的分类</strong>：</p>
+        <p>- 锐角：0° < α < 90°</p>
+        <p>- 直角：α = 90°</p>
+        <p>- 钝角：90° < α < 180°</p>
+        <p>- 平角：α = 180°</p>
+        <p>- 周角：α = 360°</p>
+      </div>
+      
+      <div class="example-box">
+        <h4>📝 基础例题</h4>
+        <p><strong>例3：</strong>把 25.45° 用度、分、秒表示。</p>
+        <details>
+          <summary>👆 点击查看解析</summary>
+          <p>25.45° = 25° + 0.45°</p>
+          <p>0.45° = 0.45 × 60' = 27'</p>
+          <p>所以 25.45° = 25° 27'（不需要秒）</p>
+        </details>
+      </div>
+    </div>
+    
+    <!-- 即时练习 -->
+    <div class="section">
+      <h2>🎯 即时练习（4.3）</h2>
+      
+      <div class="quiz-item">
+        <p><strong>练习1：</strong>1 度等于多少分？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 10'</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 60'</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 100'</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 360'</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习2：</strong>下列说法正确的是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">A. 锐角是大于 90° 的角</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">B. 钝角是小于 90° 的角</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">C. 直角是等于 90° 的角</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">D. 平角是等于 360° 的角</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习3：</strong>把 30.5° 用度、分表示。</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">A. 30° 30'</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">B. 30° 50'</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">C. 30° 05'</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">D. 30° 10'</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习4：</strong>把 45° 30' 用度表示。</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 45.3°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 45.5°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 45.3°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 45.05°</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习5：</strong>下列哪个角是钝角？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">A. 45°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">B. 90°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">C. 120°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">D. 180°</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 4.4 角的比较与应用 -->
+  <div class="content-page" id="section4_4">
+    <button class="back-btn" onclick="showToc()">📋 返回目录</button>
+    
+    <div class="section">
+      <h2>4.4 角的比较与应用</h2>
+      
+      <div class="concept-box">
+        <h3>📖 基础概念</h3>
+        <p><strong>角的大小比较</strong>：</p>
+        <p>- 度量法：量出角度，直接比较</p>
+        <p>- 叠合法：把一个角画在另一个角上面，使顶点重合、一边重合，看另一边的位置</p>
+        <p><strong>角平分线</strong>：从一个角的顶点出发，把这个角分成两个相等的角的射线，叫做这个角的平分线。</p>
+        <p>如果 OC 平分 ∠AOB，那么 ∠AOC = ∠COB = 1/2∠AOB。</p>
+      </div>
+    </div>
+    
+    <!-- 即时练习 -->
+    <div class="section">
+      <h2>🎯 即时练习（4.4）</h2>
+      
+      <div class="quiz-item">
+        <p><strong>练习1：</strong>如果 OC 平分 ∠AOB，∠AOB = 60°，则 ∠AOC 的度数是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 20°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 30°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 40°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 60°</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习2：</strong>下列说法正确的是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">A. 角平分线是一条线段</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">B. 角平分线是一条直线</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">C. 角平分线是一条射线</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">D. 角平分线是一个点</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习3：</strong>如果 ∠AOC = ∠COB，OC 是 ∠AOB 的什么？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">A. 角平分线</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">B. 中线</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">C. 高线</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">D. 垂直平分线</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习4：</strong>比较 ∠A = 45° 30' 和 ∠B = 45.5° 的大小。</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">A. ∠A > ∠B</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">B. ∠A < ∠B</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">C. ∠A = ∠B</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">D. 无法比较</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习5：</strong>如果 OD 平分 ∠AOC，∠AOD = 25°，则 ∠AOC 的度数是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 25°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 50°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 75°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 100°</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 4.5 画角的和、差与角的平分线 -->
+  <div class="content-page" id="section4_5">
+    <button class="back-btn" onclick="showToc()">📋 返回目录</button>
+    
+    <div class="section">
+      <h2>4.5 画角的和、差与角的平分线</h2>
+      
+      <div class="concept-box">
+        <h3>📖 基础概念</h3>
+        <p><strong>角的和</strong>：∠AOC = ∠AOB + ∠BOC</p>
+        <p><strong>角的差</strong>：∠AOB = ∠AOC - ∠BOC</p>
+        <p><strong>角平分线的性质</strong>：角平分线上的点到角两边的距离相等。</p>
+      </div>
+    </div>
+    
+    <!-- 即时练习 -->
+    <div class="section">
+      <h2>🎯 即时练习（4.5）</h2>
+      
+      <div class="quiz-item">
+        <p><strong>练习1：</strong>如果 ∠AOB = 30°，∠BOC = 20°，且 OB 在 ∠AOC 内部，则 ∠AOC 的度数是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">A. 50°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">B. 10°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">C. 30°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">D. 20°</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习2：</strong>如果 ∠AOC = 60°，∠BOC = 20°，且 OB 在 ∠AOC 内部，则 ∠AOB 的度数是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 60°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 40°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 20°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 80°</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习3：</strong>下列说法正确的是？（多选）</p>
+        <div class="option-btn" onclick="checkMulti(this, ['A','B'], event)">A. 角平分线上的点到角两边的距离相等</div>
+        <div class="option-btn" onclick="checkMulti(this, ['A','B'], event)">B. 如果 OC 平分 ∠AOB，那么 ∠AOC = ∠COB</div>
+        <div class="option-btn" onclick="checkMulti(this, ['A','B'], event)">C. 角的和就是角度数相加</div>
+        <div class="option-btn" onclick="checkMulti(this, ['A','B'], event)">D. 角的差就是角度数相减</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习4：</strong>如果 ∠AOB = 90°，OC 是 ∠AOB 的平分线，则 ∠AOC 的度数是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 30°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 45°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 60°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 90°</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习5：</strong>如果 ∠AOC = 80°，OB 在 ∠AOC 内部，∠AOB = 50°，则 ∠BOC 的度数是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">A. 30°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">B. 50°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">C. 80°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'A', event)">D. 130°</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 4.6 余角、补角 -->
+  <div class="content-page" id="section4_6">
+    <button class="back-btn" onclick="showToc()">📋 返回目录</button>
+    
+    <div class="section">
+      <h2>4.6 余角、补角</h2>
+      
+      <div class="concept-box">
+        <h3>📖 基础概念</h3>
+        <p><strong>余角</strong>：如果两个角的和等于 90°，这两个角叫做互为余角（简称互余）。</p>
+        <p><strong>补角</strong>：如果两个角的和等于 180°，这两个角叫做互为补角（简称互补）。</p>
+        <p><strong>性质</strong>：</p>
+        <p>- 同角（或等角）的余角相等</p>
+        <p>- 同角（或等角）的补角相等</p>
+      </div>
+      
+      <div class="example-box">
+        <h4>📝 基础例题</h4>
+        <p><strong>例4：</strong>一个角的补角是它的 3 倍，求这个角的度数。</p>
+        <details>
+          <summary>👆 点击查看解析</summary>
+          <p>设这个角为 x°，则它的补角为 (180-x)°。</p>
+          <p>根据题意：180 - x = 3x</p>
+          <p>180 = 4x</p>
+          <p>x = 45</p>
+          <p>答：这个角是 45°。</p>
+        </details>
+      </div>
+    </div>
+    
+    <!-- 即时练习 -->
+    <div class="section">
+      <h2>🎯 即时练习（4.6）</h2>
+      
+      <div class="quiz-item">
+        <p><strong>练习1：</strong>一个角是 35°，它的余角是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 35°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 55°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 145°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 90°</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习2：</strong>一个角是 120°，它的补角是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 60°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 120°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 90°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 30°</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习3：</strong>下列说法正确的是？</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">A. 相等的角一定互余</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">B. 互余的两个角一定相等</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">C. 同角的余角相等</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'C', event)">D. 互补的两个角一定都是钝角</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习4：</strong>一个角的余角是它的 2 倍，求这个角的度数。</p>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">A. 30°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">B. 45°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">C. 60°</div>
+        <div class="option-btn" onclick="checkQuiz(this, 'B', event)">D. 90°</div>
+      </div>
+      
+      <div class="quiz-item">
+        <p><strong>练习5：</strong>下列说法正确的是？（多选）</p>
+        <div class="option-btn" onclick="checkMulti(this, ['A','D'], event)">A. 同角的补角相等</div>
+        <div class="option-btn" onclick="checkMulti(this, ['A','D'], event)">B. 等角的余角相等</div>
+        <div class="option-btn" onclick="checkMulti(this, ['A','D'], event)">C. 互余的两个角一定都是锐角</div>
+        <div class="option-btn" onclick="checkMulti(this, ['A','D'], event)">D. 互补的两个角可能都是直角</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSection = null;
+
+function showToc() {
+  document.getElementById('tocPage').style.display = 'block';
+  document.querySelectorAll('.content-page').forEach(p => p.classList.remove('active'));
+  currentSection = null;
+}
+
+function showSection(id) {
+  document.getElementById('tocPage').style.display = 'none';
+  document.querySelectorAll('.content-page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentSection = id;
+}
+
+function goHome() {
+  window.location.href = '数学预习助手.html';
+}
+
+// 选择题批改
+function checkQuiz(btn, correctAnswer, event) {
+  const allOptions = event.target.parentElement.querySelectorAll('.option-btn');
+  allOptions.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt.textContent.trim().startsWith(correctAnswer + '.')) {
+      opt.classList.add('correct');
+    }
+  });
+  
+  if (!btn.textContent.trim().startsWith(correctAnswer + '.')) {
+    btn.classList.add('wrong');
+  }
+}
+
+// 多选题批改
+function checkMulti(btn, correctAnswers, event) {
+  alert('正确答案：' + correctAnswers.join(', '));
+}
+
+// 初始化
+showToc();
+</script>
+
+</body>
+</html>

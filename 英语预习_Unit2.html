@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2 · Family Ties · 英语预习助手</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background:#f0f2f5; min-height:100vh; }
+
+.header { background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:14px 20px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+.back-btn { background:rgba(255,255,255,0.2); border:none; color:white; font-size:1.3em; padding:6px 12px; border-radius:8px; cursor:pointer; text-decoration:none; display:inline-block; }
+.back-btn:hover { background:rgba(255,255,255,0.3); }
+.header h1 { font-size:1.15em; font-weight:600; }
+.header p { font-size:0.82em; opacity:0.9; margin-top:2px; }
+
+.toc-page { max-width:900px; margin:0 auto; padding:24px 20px; display:block; }
+.content-page { display:none; max-width:900px; margin:0 auto; padding:20px; }
+.section-title { font-size:1.25em; font-weight:700; color:#333; margin-bottom:16px; padding-bottom:8px; border-bottom:3px solid #667eea; }
+
+.vocab-table { width:100%; border-collapse:collapse; background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08); margin-bottom:20px; font-size:0.9em; }
+.vocab-table th { background:linear-gradient(135deg,#667eea,#764ba2); color:white; padding:10px 12px; text-align:left; }
+.vocab-table td { padding:9px 12px; border-bottom:1px solid #f0f0f0; }
+.vocab-table tr:nth-child(even){background:#f8f9fa;}
+.vocab-table tr:hover{background:#eef0ff;}
+
+.back-area { text-align:center; margin-top:18px; }
+.back-btn2 { display:inline-block; padding:10px 24px; border-radius:10px; border:2px solid #667eea; background:white; color:#667eea; font-size:0.95em; font-weight:600; cursor:pointer; text-decoration:none; transition:all 0.15s; }
+.back-btn2:hover { background:#667eea; color:white; }
+
+/* Flashcard */
+.flashcard-area { background:white; border-radius:16px; padding:28px 20px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.08); text-align:center; }
+.flashcard-progress { font-size:0.85em; color:#999; margin-bottom:8px; }
+.flashcard-word { font-size:2em; font-weight:800; color:#667eea; margin:16px 0 6px 0; }
+.flashcard-pos { font-size:0.85em; color:#999; margin-bottom:18px; }
+.flashcard-opts { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+@media(max-width:500px){ .flashcard-opts{grid-template-columns:1fr;} }
+.flashcard-opt { padding:14px 10px; border-radius:12px; border:2px solid #e0e0e0; background:white; font-size:1em; cursor:pointer; transition:all 0.15s; }
+.flashcard-opt:hover { border-color:#667eea; background:#f0f2ff; }
+.flashcard-opt.correct { border-color:#4caf50; background:#e8f5e9; color:#2e7d32; font-weight:700; }
+.flashcard-opt.wrong { border-color:#ef5350; background:#ffebee; color:#c62828; }
+.flashcard-opt.disabled { pointer-events:none; opacity:0.6; }
+.flashcard-feedback { font-size:0.95em; font-weight:600; margin-bottom:14px; min-height:1.4em; }
+.flashcard-feedback.correct { color:#4caf50; }
+.flashcard-feedback.wrong { color:#ef5350; }
+.flashcard-next { padding:10px 28px; border-radius:10px; border:none; background:linear-gradient(135deg,#667eea,#764ba2); color:white; font-size:1em; font-weight:600; cursor:pointer; margin-top:10px; }
+.flashcard-score { font-size:0.9em; color:#555; margin-top:12px; }
+
+/* Grammar */
+.grammar-content { background:white; border-radius:14px; padding:22px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.08); font-size:0.9em; line-height:1.8; }
+.grammar-content h3 { color:#667eea; margin:15px 0 10px 0; }
+.grammar-content table { width:100%; border-collapse:collapse; margin:12px 0; }
+.grammar-content th { background:#f0f0f0; padding:8px 12px; text-align:left; }
+.grammar-content td { padding:8px 12px; border-bottom:1px solid #f0f0f0; }
+
+/* Grammar Quiz */
+.gq-item { background:white; border-radius:12px; padding:18px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+.gq-q { font-size:0.95em; font-weight:600; margin-bottom:12px; color:#333; }
+.gq-opts { display:flex; flex-direction:column; gap:8px; }
+.gq-opt { padding:10px 14px; border-radius:8px; border:2px solid #e0e0e0; background:white; cursor:pointer; transition:all 0.15s; }
+.gq-opt:hover { border-color:#667eea; }
+.gq-opt.correct { border-color:#4caf50; background:#e8f5e9; color:#2e7d32; font-weight:600; pointer-events:none; }
+.gq-opt.wrong { border-color:#ef5350; background:#ffebee; color:#c62828; pointer-events:none; }
+.gq-feedback { font-size:0.85em; margin-top:8px; font-weight:600; }
+.gq-explanation { font-size:0.82em; color:#666; margin-top:8px; padding:10px; background:#f5f5f5; border-radius:6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <button class="back-btn" onclick="goBackToMain()">←</button>
+  <div>
+    <h1>🌱 Unit 2 · Family Ties</h1>
+    <p>Big Question: What makes a family?</p>
+  </div>
+</div>
+
+<!-- TOC Page -->
+<div class="toc-page" id="tocPage">
+  <div style="font-size:1.1em;color:#555;margin-bottom:18px;text-align:center;font-weight:600;">📚 选择学习章节</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+    <div class="back-btn2" style="text-align:center;" onclick="showPage('vocabTable')">
+      <div style="font-size:2.2em;margin-bottom:8px;">📖</div>
+      <div style="font-size:0.95em;font-weight:700;color:#333;">核心词汇</div>
+      <div style="font-size:0.78em;color:#999;margin-top:5px;">47 个 · 熟读记忆</div>
+    </div>
+    <div class="back-btn2" style="text-align:center;" onclick="startFlashcard('en2cn')">
+      <div style="font-size:2.2em;margin-bottom:8px;">✏️</div>
+      <div style="font-size:0.95em;font-weight:700;color:#333;">英译中 · 四选一</div>
+      <div style="font-size:0.78em;color:#999;margin-top:5px;">47 词 · 互动卡片</div>
+    </div>
+    <div class="back-btn2" style="text-align:center;" onclick="startFlashcard('cn2en')">
+      <div style="font-size:2.2em;margin-bottom:8px;">🔤</div>
+      <div style="font-size:0.95em;font-weight:700;color:#333;">中译英 · 四选一</div>
+      <div style="font-size:0.78em;color:#999;margin-top:5px;">47 词 · 互动卡片</div>
+    </div>
+    <div class="back-btn2" style="text-align:center;" onclick="showPage('grammar')">
+      <div style="font-size:2.2em;margin-bottom:8px;">📘</div>
+      <div style="font-size:0.95em;font-weight:700;color:#333;">语法讲解</div>
+      <div style="font-size:0.78em;color:#999;margin-top:5px;">点击查看语法要点</div>
+    </div>
+    <div class="back-btn2" style="text-align:center;" onclick="startGrammarQuiz()">
+      <div style="font-size:2.2em;margin-bottom:8px;">📝</div>
+      <div style="font-size:0.95em;font-weight:700;color:#333;">语法练习</div>
+      <div style="font-size:0.78em;color:#999;margin-top:5px;">10 题 · 点击开始</div>
+    </div>
+  </div>
+</div>
+
+<!-- Vocabulary Table Page -->
+<div class="content-page" id="vocabTable">
+  <button class="back-btn" style="background:#667eea;color:white;margin-bottom:16px;" onclick="showPage('tocPage')">← 返回目录</button>
+  <div class="section-title">📖 核心词汇（47个）</div>
+  <table class="vocab-table">
+  <tr><th>单词</th><th>词性</th><th>释义</th></tr>
+  <tr><td><strong>tie</strong></td><td>n.</td><td>联系；纽带</td></tr>
+  <tr><td><strong>relation</strong></td><td>n.</td><td>关系</td></tr>
+  <tr><td><strong>introduce</strong></td><td>v.</td><td>介绍</td></tr>
+  <tr><td><strong>classmate</strong></td><td>n.</td><td>同班同学</td></tr>
+  <tr><td><strong>relative</strong></td><td>n.</td><td>亲戚</td></tr>
+  <tr><td><strong>only</strong></td><td>adj.</td><td>仅有的</td></tr>
+  <tr><td><strong>only child</strong></td><td>n.</td><td>独生子/女</td></tr>
+  <tr><td><strong>twin</strong></td><td>n.</td><td>双胞胎</td></tr>
+  <tr><td><strong>husband</strong></td><td>n.</td><td>丈夫</td></tr>
+  <tr><td><strong>wife</strong></td><td>n.</td><td>妻子(pl. wives)</td></tr>
+  <tr><td><strong>son</strong></td><td>n.</td><td>儿子</td></tr>
+  <tr><td><strong>daughter</strong></td><td>n.</td><td>女儿</td></tr>
+  <tr><td><strong>other</strong></td><td>adj.</td><td>其他的</td></tr>
+  <tr><td><strong>member</strong></td><td>n.</td><td>成员</td></tr>
+  <tr><td><strong>add</strong></td><td>v.</td><td>添加</td></tr>
+  <tr><td><strong>note</strong></td><td>n.</td><td>笔记；音符</td></tr>
+  <tr><td><strong>album</strong></td><td>n.</td><td>相册</td></tr>
+  <tr><td><strong>teach</strong></td><td>v.</td><td>教</td></tr>
+  <tr><td><strong>homework</strong></td><td>n.</td><td>家庭作业</td></tr>
+  <tr><td><strong>guitar</strong></td><td>n.</td><td>吉他</td></tr>
+  <tr><td><strong>elder</strong></td><td>adj.</td><td>年长的</td></tr>
+  <tr><td><strong>sofa</strong></td><td>n.</td><td>沙发</td></tr>
+  <tr><td><strong>round</strong></td><td>adj.</td><td>圆形的</td></tr>
+  <tr><td><strong>dark</strong></td><td>adj.</td><td>乌黑的；深色的</td></tr>
+  <tr><td><strong>chess</strong></td><td>n.</td><td>国际象棋</td></tr>
+  <tr><td><strong>duty</strong></td><td>n.</td><td>责任</td></tr>
+  <tr><td><strong>born</strong></td><td>v.</td><td>出生(be born)</td></tr>
+  <tr><td><strong>weekend</strong></td><td>n.</td><td>周末</td></tr>
+  <tr><td><strong>thing</strong></td><td>n.</td><td>事情</td></tr>
+  <tr><td><strong>enough</strong></td><td>adv.</td><td>足够地</td></tr>
+  <tr><td><strong>Wel done!</strong></td><td>—</td><td>做得好！</td></tr>
+  <tr><td><strong>dish</strong></td><td>n.</td><td>碟子；一道菜</td></tr>
+  <tr><td><strong>usually</strong></td><td>adv.</td><td>通常</td></tr>
+  <tr><td><strong>quick</strong></td><td>adj.</td><td>快的</td></tr>
+  <tr><td><strong>together</strong></td><td>adv.</td><td>在一起</td></tr>
+  <tr><td><strong>flat</strong></td><td>n.</td><td>公寓</td></tr>
+  <tr><td><strong>fun</strong></td><td>n.</td><td>乐趣</td></tr>
+  <tr><td><strong>celebration</strong></td><td>n.</td><td>庆祝活动</td></tr>
+  <tr><td><strong>prepare</strong></td><td>v.</td><td>准备</td></tr>
+  <tr><td><strong>decorate</strong></td><td>v.</td><td>装饰</td></tr>
+  <tr><td><strong>living room</strong></td><td>n.</td><td>客厅</td></tr>
+  <tr><td><strong>balloon</strong></td><td>n.</td><td>气球</td></tr>
+  <tr><td><strong>set</strong></td><td>v.</td><td>放置</td></tr>
+  <tr><td><strong>surprised</strong></td><td>adj.</td><td>惊奇的</td></tr>
+  <tr><td><strong>super-excited</strong></td><td>adj.</td><td>超级激动的</td></tr>
+  <tr><td><strong>joy</strong></td><td>n.</td><td>高兴；喜悦</td></tr>
+  <tr><td><strong>jump for joy</strong></td><td>—</td><td>欢呼雀跃</td></tr>
+</table>
+  <div style="text-align:center;color:#999;font-size:0.85em;margin:12px 0;">... 还有28个词汇 ...</div>
+  <div class="back-area"><button class="back-btn2" onclick="showPage('tocPage')">← 返回目录</button></div>
+</div>
+
+<!-- Flashcard Page -->
+<div class="content-page" id="flashcardPage">
+  <button class="back-btn" style="background:#667eea;color:white;margin-bottom:16px;" onclick="showPage('tocPage')">← 返回目录</button>
+  <div id="flashcardTitle" style="font-size:1.1em;font-weight:700;color:#333;margin-bottom:16px;"></div>
+  <div class="flashcard-area" id="flashcardArea">
+    <div class="flashcard-word">加载中...</div>
+  </div>
+</div>
+
+<!-- Grammar Page -->
+<div class="content-page" id="grammar">
+  <button class="back-btn" style="background:#667eea;color:white;margin-bottom:16px;" onclick="showPage('tocPage')">← 返回目录</button>
+  <div class="section-title">📘 语法讲解 · 一般现在时</div>
+  <div class="grammar-content">
+    <h3>一般现在时 (Present Simple)</h3>
+    <p><strong>肯定句：</strong></p>
+    <ul style="margin-left:20px;margin-bottom:12px;">
+      <li>I/You/We/They <strong>like</strong> the school garden.</li>
+      <li>He/She/It <strong>likes</strong> the school garden.</li>
+    </ul>
+    <p><strong>否定句：</strong></p>
+    <ul style="margin-left:20px;margin-bottom:12px;">
+      <li>I/You/We/They <strong>don't like</strong> maths.</li>
+      <li>He/She/It <strong>doesn't like</strong> maths.</li>
+    </ul>
+    <p><strong>一般疑问句：</strong></p>
+    <ul style="margin-left:20px;margin-bottom:12px;">
+      <li><strong>Do</strong> you run fast? — Yes, I do. / No, I don't.</li>
+      <li><strong>Does</strong> he run fast? — Yes, he does. / No, he doesn't.</li>
+    </ul>
+  </div>
+  <div class="back-area"><button class="back-btn2" onclick="showPage('tocPage')">← 返回目录</button></div>
+</div>
+
+<!-- Grammar Quiz Page -->
+<div class="content-page" id="grammarQuiz">
+  <button class="back-btn" style="background:#667eea;color:white;margin-bottom:16px;" onclick="showPage('tocPage')">← 返回目录</button>
+  <div class="section-title">📝 语法练习（10题）</div>
+  <div id="gqContainer"></div>
+  <div class="back-area"><button class="back-btn2" onclick="showPage('tocPage')">← 返回目录</button></div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const VOCAB = [
+    {"word": "tie", "pos": "n.", "meaning": "联系；纽带"},
+    {"word": "relation", "pos": "n.", "meaning": "关系"},
+    {"word": "introduce", "pos": "v.", "meaning": "介绍"},
+    {"word": "classmate", "pos": "n.", "meaning": "同班同学"},
+    {"word": "relative", "pos": "n.", "meaning": "亲戚"},
+    {"word": "only", "pos": "adj.", "meaning": "仅有的"},
+    {"word": "only child", "pos": "n.", "meaning": "独生子/女"},
+    {"word": "twin", "pos": "n.", "meaning": "双胞胎"},
+    {"word": "husband", "pos": "n.", "meaning": "丈夫"},
+    {"word": "wife", "pos": "n.", "meaning": "妻子(pl. wives)"},
+    {"word": "son", "pos": "n.", "meaning": "儿子"},
+    {"word": "daughter", "pos": "n.", "meaning": "女儿"},
+    {"word": "other", "pos": "adj.", "meaning": "其他的"},
+    {"word": "member", "pos": "n.", "meaning": "成员"},
+    {"word": "add", "pos": "v.", "meaning": "添加"},
+    {"word": "note", "pos": "n.", "meaning": "笔记；音符"},
+    {"word": "album", "pos": "n.", "meaning": "相册"},
+    {"word": "teach", "pos": "v.", "meaning": "教"},
+    {"word": "homework", "pos": "n.", "meaning": "家庭作业"},
+    {"word": "guitar", "pos": "n.", "meaning": "吉他"},
+    {"word": "elder", "pos": "adj.", "meaning": "年长的"},
+    {"word": "sofa", "pos": "n.", "meaning": "沙发"},
+    {"word": "round", "pos": "adj.", "meaning": "圆形的"},
+    {"word": "dark", "pos": "adj.", "meaning": "乌黑的；深色的"},
+    {"word": "chess", "pos": "n.", "meaning": "国际象棋"},
+    {"word": "duty", "pos": "n.", "meaning": "责任"},
+    {"word": "born", "pos": "v.", "meaning": "出生(be born)"},
+    {"word": "weekend", "pos": "n.", "meaning": "周末"},
+    {"word": "thing", "pos": "n.", "meaning": "事情"},
+    {"word": "enough", "pos": "adv.", "meaning": "足够地"},
+    {"word": "Wel done!", "pos": "—", "meaning": "做得好！"},
+    {"word": "dish", "pos": "n.", "meaning": "碟子；一道菜"},
+    {"word": "usually", "pos": "adv.", "meaning": "通常"},
+    {"word": "quick", "pos": "adj.", "meaning": "快的"},
+    {"word": "together", "pos": "adv.", "meaning": "在一起"},
+    {"word": "flat", "pos": "n.", "meaning": "公寓"},
+    {"word": "fun", "pos": "n.", "meaning": "乐趣"},
+    {"word": "celebration", "pos": "n.", "meaning": "庆祝活动"},
+    {"word": "prepare", "pos": "v.", "meaning": "准备"},
+    {"word": "decorate", "pos": "v.", "meaning": "装饰"},
+    {"word": "living room", "pos": "n.", "meaning": "客厅"},
+    {"word": "balloon", "pos": "n.", "meaning": "气球"},
+    {"word": "set", "pos": "v.", "meaning": "放置"},
+    {"word": "surprised", "pos": "adj.", "meaning": "惊奇的"},
+    {"word": "super-excited", "pos": "adj.", "meaning": "超级激动的"},
+    {"word": "joy", "pos": "n.", "meaning": "高兴；喜悦"},
+    {"word": "jump for joy", "pos": "—", "meaning": "欢呼雀跃"}
+  ];
+
+const GRAMMAR_Q = [
+    {"q": "_____ am a student.", "opts": ["I", "Me", "My", "Mine"], "answer": 0, "explanation": "空格处作主语，用主格 I"},
+    {"q": "Please help _____.", "opts": ["I", "me", "my", "mine"], "answer": 1, "explanation": "help 是动词，后面用宾格 me"},
+    {"q": "_____ is playing football.", "opts": ["He", "Him", "His", "He's"], "answer": 0, "explanation": "空格处作主语，用主格 He"},
+    {"q": "I love _____.", "opts": ["she", "her", "hers", "herself"], "answer": 1, "explanation": "love 是动词，后面用宾格 her"},
+    {"q": "Look! She _____ dancing.", "opts": ["is", "are", "am", "be"], "answer": 0, "explanation": "She 是第三人称单数，用 is"},
+    {"q": "They _____ watching TV now.", "opts": ["is", "are", "am", "be"], "answer": 1, "explanation": "They 是复数，用 are"},
+    {"q": "I _____ doing my homework.", "opts": ["is", "are", "am", "be"], "answer": 2, "explanation": "I 用 am"},
+    {"q": "He _____ playing the guitar.", "opts": ["is", "are", "am", "be"], "answer": 0, "explanation": "He 是第三人称单数，用 is"},
+    {"q": "We _____ eating dinner.", "opts": ["is", "are", "am", "be"], "answer": 1, "explanation": "We 用 are"},
+    {"q": "The cat _____ sleeping.", "opts": ["is", "are", "am", "be"], "answer": 0, "explanation": "The cat 是第三人称单数，用 is"}
+  ];
+
+// ===================== NAVIGATION =====================
+function goBackToMain() {
+    window.location.href = '英语预习助手.html';
+}
+
+function showPage(id) {
+    // 隐藏所有页面
+    document.getElementById('tocPage').style.display = 'none';
+    document.querySelectorAll('.content-page').forEach(p => p.style.display = 'none');
+    
+    // 显示目标页面
+    if (id === 'tocPage') {
+        document.getElementById('tocPage').style.display = 'block';
+    } else {
+        document.getElementById(id).style.display = 'block';
+    }
+    
+    window.scrollTo(0, 0);
+}
+
+// ===================== FLASHCARD =====================
+let currentMode = 'en2cn';
+let currentVocab = [];
+let flashcardIndex = 0;
+let flashcardScore = 0;
+let flashcardAnswered = 0;
+
+function startFlashcard(mode) {
+    currentMode = mode;
+    currentVocab = VOCAB;
+    flashcardIndex = 0;
+    flashcardScore = 0;
+    flashcardAnswered = 0;
+    showPage('flashcardPage');
+    document.getElementById('flashcardTitle').textContent = mode === 'en2cn' ? '✏️ 英译中 · 四选一' : '🔤 中译英 · 四选一';
+    renderFlashcard();
+}
+
+function renderFlashcard() {
+    const area = document.getElementById('flashcardArea');
+    const total = currentVocab.length;
+    
+    if (flashcardIndex >= total) {
+        area.innerHTML = `
+            <div style="font-size:1.2em;font-weight:700;color:#667eea;margin-bottom:12px;">🎉 练习完成！</div>
+            <div style="font-size:1em;color:#555;margin-bottom:18px;">得分：${flashcardScore} / ${total}</div>
+            <button class="flashcard-next" onclick="startFlashcard(currentMode)">🔄 再来一次</button>
+        `;
+        return;
+    }
+    
+    const item = currentVocab[flashcardIndex];
+    let question, correctAnswer, options;
+    
+    if (currentMode === 'en2cn') {
+        question = item.word;
+        correctAnswer = item.meaning;
+        let wrongAnswers = currentVocab.filter((v, i) => i !== flashcardIndex).map(v => v.meaning);
+        wrongAnswers = wrongAnswers.sort(() => Math.random() - 0.5).slice(0, 3);
+        options = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+    } else {
+        question = item.meaning;
+        correctAnswer = item.word;
+        let wrongAnswers = currentVocab.filter((v, i) => i !== flashcardIndex).map(v => v.word);
+        wrongAnswers = wrongAnswers.sort(() => Math.random() - 0.5).slice(0, 3);
+        options = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+    }
+    
+    area.innerHTML = `
+        <div class="flashcard-progress">第 ${flashcardIndex + 1} / ${total} 题</div>
+        <div class="flashcard-word">${question}</div>
+        <div class="flashcard-pos">${currentMode === 'en2cn' ? '选择正确的中文释义' : '选择正确的英文单词'}</div>
+        <div class="flashcard-opts">
+            ${options.map((opt, i) => `
+                <button class="flashcard-opt" onclick="checkFlashcard(${i}, ${options.indexOf(correctAnswer)}, '${correctAnswer.replace(/'/g, "\\'")}')">${opt}</button>
+            `).join('')}
+        </div>
+        <div class="flashcard-feedback" id="flashcardFeedback"></div>
+        <button class="flashcard-next" id="flashcardNext" style="display:none;" onclick="nextFlashcard()">下一题 →</button>
+        <div class="flashcard-score">得分：${flashcardScore} / ${flashcardAnswered}</div>
+    `;
+}
+
+function checkFlashcard(selectedIndex, correctIndex, correctAnswer) {
+    if (flashcardAnswered > flashcardIndex) return;
+    
+    const opts = document.querySelectorAll('.flashcard-opt');
+    const feedback = document.getElementById('flashcardFeedback');
+    const nextBtn = document.getElementById('flashcardNext');
+    
+    opts.forEach(opt => opt.classList.add('disabled'));
+    flashcardAnswered++;
+    
+    if (selectedIndex === correctIndex) {
+        opts[selectedIndex].classList.add('correct');
+        feedback.textContent = '✅ 正确！';
+        feedback.className = 'flashcard-feedback correct';
+        flashcardScore++;
+    } else {
+        opts[selectedIndex].classList.add('wrong');
+        opts[correctIndex].classList.add('correct');
+        feedback.textContent = `❌ 错误！正确答案是：${correctAnswer}`;
+        feedback.className = 'flashcard-feedback wrong';
+    }
+    
+    nextBtn.style.display = 'inline-block';
+}
+
+function nextFlashcard() {
+    flashcardIndex++;
+    renderFlashcard();
+}
+
+// ===================== GRAMMAR QUIZ =====================
+let gqIndex = 0;
+let gqScore = 0;
+
+function startGrammarQuiz() {
+    gqIndex = 0;
+    gqScore = 0;
+    showPage('grammarQuiz');
+    renderGrammarQuestion();
+}
+
+function renderGrammarQuestion() {
+    const container = document.getElementById('gqContainer');
+    const total = GRAMMAR_Q.length;
+    
+    if (gqIndex >= total) {
+        container.innerHTML = `
+            <div style="text-align:center;padding:40px 20px;">
+                <div style="font-size:1.2em;font-weight:700;color:#667eea;margin-bottom:12px;">🎉 练习完成！</div>
+                <div style="font-size:1em;color:#555;">得分：${gqScore} / ${total}</div>
+            </div>
+        `;
+        return;
+    }
+    
+    const q = GRAMMAR_Q[gqIndex];
+    const shuffledOpts = [...q.opts];
+    for (let i = shuffledOpts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledOpts[i], shuffledOpts[j]] = [shuffledOpts[j], shuffledOpts[i]];
+    }
+    const correctOpt = shuffledOpts.indexOf(q.opts[q.answer]);
+    
+    container.innerHTML = `
+        <div class="gq-item">
+            <div class="gq-q">第 ${gqIndex + 1} / ${total} 题：${q.q}</div>
+            <div class="gq-opts">
+                ${shuffledOpts.map((opt, i) => `
+                    <button class="gq-opt" onclick="checkGrammar(${i}, ${correctOpt}, '${q.explanation.replace(/'/g, "\\'")}')">${opt}</button>
+                `).join('')}
+            </div>
+            <div class="gq-feedback" id="gqFeedback"></div>
+            <div class="gq-explanation" id="gqExplanation" style="display:none;"></div>
+            <button class="flashcard-next" id="gqNextBtn" style="display:none;margin-top:12px;" onclick="nextGrammarQuestion()">下一题 →</button>
+        </div>
+    `;
+}
+
+function checkGrammar(selectedIndex, correctIndex, explanation) {
+    const opts = document.querySelectorAll('.gq-opt');
+    const feedback = document.getElementById('gqFeedback');
+    const explanationDiv = document.getElementById('gqExplanation');
+    const nextBtn = document.getElementById('gqNextBtn');
+    
+    opts.forEach(opt => opt.classList.add('disabled'));
+    
+    if (selectedIndex === correctIndex) {
+        opts[selectedIndex].classList.add('correct');
+        feedback.textContent = '✅ 正确！';
+        feedback.className = 'gq-feedback correct';
+        gqScore++;
+    } else {
+        opts[selectedIndex].classList.add('wrong');
+        opts[correctIndex].classList.add('correct');
+        feedback.textContent = '❌ 错误！';
+        feedback.className = 'gq-feedback wrong';
+    }
+    
+    explanationDiv.textContent = '💡 讲解：' + explanation;
+    explanationDiv.style.display = 'block';
+    nextBtn.style.display = 'inline-block';
+}
+
+function nextGrammarQuestion() {
+    gqIndex++;
+    renderGrammarQuestion();
+}
+</script>
+
+</body>
+</html>
