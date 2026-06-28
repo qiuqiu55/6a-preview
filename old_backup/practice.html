@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>综合练习 · 数学预习助手</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f7fa;color:#2c3e50;padding-bottom:80px}
+
+/* 顶部 */
+.top-nav{background:linear-gradient(135deg,#ff7043,#f4511e);color:white;padding:14px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.12)}
+.back-btn{background:rgba(255,255,255,0.25);color:white;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:0.9em}
+.page-title{font-size:1.05em;font-weight:bold}
+
+/* 模式选择 */
+.mode-section{padding:16px}
+.mode-section h3{font-size:0.9em;color:#555;margin-bottom:10px;padding-left:2px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mode-card{
+    background:white;border-radius:16px;padding:20px 14px;text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.06);cursor:pointer;transition:all 0.2s;
+    border:2.5px solid transparent;
+}
+.mode-card:active{transform:scale(0.97)}
+.mode-card.selected{border-color:#ff7043;background:#fff8f5}
+.mode-icon{font-size:2.2em;margin-bottom:8px}
+.mode-card h4{font-size:0.95em;color:#333;margin-bottom:4px}
+.mode-card p{font-size:0.75em;color:#999;line-height:1.4}
+
+/* 设置区 */
+.settings-card{margin:0 16px 16px;background:white;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f5f5f5}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:0.88em;color:#444}
+.setting-label span{font-size:0.82em;color:#999;display:block;margin-top:2px}
+.setting-control select,.setting-control input{
+    padding:6px 10px;border:1.5px solid #ddd;border-radius:8px;font-size:0.88em;
+    background:white;color:#333;outline:none;
+}
+.setting-control input[type=number]{width:60px;text-align:center}
+.toggle-switch{
+    width:44px;height:24px;background:#ddd;border-radius:12px;
+    position:relative;cursor:pointer;transition:background 0.3s;
+}
+.toggle-switch.on{background:#ff7043}
+.toggle-switch::after{
+    content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;
+    background:white;border-radius:50%;transition:transform 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle-switch.on::after{transform:translateX(20px)}
+
+/* 开始按钮 */
+.start-btn-wrap{text-align:center;margin:20px 16px}
+.start-btn{
+    background:linear-gradient(135deg,#ff7043,#f4511e);color:white;
+    border:none;padding:14px 48px;border-radius:16px;font-size:1.05em;
+    cursor:pointer;box-shadow:0 4px 15px rgba(255,112,67,0.35);
+    transition:all 0.2s;width:100%;max-width:360px;
+}
+.start-btn:active{transform:scale(0.97);opacity:0.9}
+
+/* ===== 答题界面 ===== */
+.quiz-view{display:none;padding:16px;max-width:700px;margin:0 auto}
+.quiz-header{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:16px;
+}
+.quiz-progress{font-size:0.82em;color:#999}
+.quiz-score{font-size:0.88em;color:#ff7043;font-weight:bold}
+.progress-bar-bg{height:6px;background:#eee;border-radius:3px;margin-bottom:18px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,#ff7043,#ffa726);border-radius:3px;transition:width 0.4s}
+
+.quiz-card{
+    background:white;border-radius:18px;padding:24px 20px;
+    box-shadow:0 3px 15px rgba(0,0,0,0.07);margin-bottom:16px;
+}
+.quiz-number{
+    display:inline-block;background:#fff3e0;color:#e65100;
+    padding:3px 10px;border-radius:10px;font-size:0.78em;font-weight:bold;
+    margin-bottom:12px;
+}
+.quiz-question{font-size:1em;line-height:1.7;color:#333;margin-bottom:16px}
+.quiz-hint{
+    background:#f5f5f5;border-radius:10px;padding:10px 14px;
+    font-size:0.82em;color:#777;margin-bottom:14px;display:none;
+}
+.quiz-hint.show{display:block}
+
+/* 选项 */
+.option-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.option-btn{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:12px;
+    cursor:pointer;transition:all 0.15s;font-size:0.92em;color:#444;
+    background:white;text-align:left;
+}
+.option-btn:active{transform:scale(0.99)}
+.option-btn:hover{border-color:#ff7043;background:#fff8f5}
+.option-btn .opt-letter{
+    width:28px;height:28px;border-radius:50%;background:#f5f5f5;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:bold;font-size:0.85em;color:#999;flex-shrink:0;
+    transition:all 0.2s;
+}
+.option-btn.correct{border-color:#4caf50;background:#e8f5e9}
+.option-btn.correct .opt-letter{background:#4caf50;color:white}
+.option-btn.wrong{border-color:#f44336;background:#ffebee}
+.option-btn.wrong .opt-letter{background:#f44336;color:white}
+.option-btn.disabled{pointer-events:none;opacity:0.6}
+
+/* 填空题 */
+.fill-input{
+    width:100%;padding:12px 14px;border:1.5px solid #e0e0e0;
+    border-radius:12px;font-size:0.95em;outline:none;
+    transition:border-color 0.2s;margin-bottom:10px;
+}
+.fill-input:focus{border-color:#ff7043}
+.fill-submit{
+    background:#ff7043;color:white;border:none;
+    padding:10px 24px;border-radius:10px;cursor:pointer;font-size:0.9em;
+}
+
+/* 反馈 */
+.quiz-feedback{
+    padding:12px 14px;border-radius:12px;font-size:0.88em;
+    line-height:1.6;display:none;margin-top:10px;
+}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct{background:#e8f5e9;color:#1b5e20;border-left:3px solid #4caf50}
+.quiz-feedback.wrong{background:#ffebee;color:#b71c1c;border-left:3px solid #f44336}
+
+/* 底部按钮 */
+.quiz-actions{display:flex;gap:10px;margin-top:16px}
+.quiz-actions button{
+    flex:1;padding:12px;border:none;border-radius:12px;
+    font-size:0.92em;cursor:pointer;transition:all 0.2s;
+}
+.btn-hint{background:#fff3e0;color:#e65100}
+.btn-next{background:linear-gradient(135deg,#ff7043,#f4511e);color:white;font-weight:bold}
+.btn-next:disabled{opacity:0.5}
+
+/* 结果页 */
+.result-view{display:none;text-align:center;padding:40px 20px}
+.result-emoji{font-size:4em;margin-bottom:16px}
+.result-title{font-size:1.3em;color:#333;margin-bottom:8px}
+.result-desc{font-size:0.9em;color:#777;line-height:1.6;margin-bottom:24px}
+.result-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px}
+.result-stat{background:white;border-radius:14px;padding:14px 8px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.result-stat .num{font-size:1.5em;font-weight:bold;color:#ff7043}
+.result-stat .label{font-size:0.72em;color:#999;margin-top:2px}
+.result-btns{display:flex;gap:10px;justify-content:center}
+.result-btns button{
+    padding:12px 28px;border-radius:12px;font-size:0.92em;
+    cursor:pointer;border:none;transition:all 0.2s;
+}
+.btn-retry{background:#fff3e0;color:#e65100}
+.btn-back{background:#eee;color:#555}
+
+/* 底部导航 */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e0e0e0;display:flex;z-index:90;box-shadow:0 -2px 10px rgba(0,0,0,0.05)}
+.tab-item{flex:1;text-align:center;padding:8px 0;cursor:pointer;color:#999;font-size:0.72em;transition:color 0.2s}
+.tab-item.active{color:#ff7043}
+.tab-item .tab-icon{font-size:1.4em;margin-bottom:2px}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+    <button class="back-btn" onclick="history.back()">← 返回</button>
+    <div class="page-title">✏️ 综合练习</div>
+</div>
+
+<!-- ===== 模式选择界面 ===== -->
+<div id="modeView">
+    <div class="mode-section">
+        <h3>🎯 选择练习模式</h3>
+        <div class="mode-grid">
+            <div class="mode-card" onclick="selectMode('random')" id="mode-random">
+                <div class="mode-icon">🎲</div>
+                <h4>随机练习</h4>
+                <p>从所有已学章节<br>随机出题混练</p>
+            </div>
+            <div class="mode-card" onclick="selectMode('weak')" id="mode-weak">
+                <div class="mode-icon">🎯</div>
+                <h4>薄弱专项</h4>
+                <p>针对常错题<br>集中强化训练</p>
+            </div>
+            <div class="mode-card" onclick="selectMode('chapter')" id="mode-chapter">
+                <div class="mode-icon">📚</div>
+                <h4>章节练习</h4>
+                <p>选择指定章节<br>针对性练习</p>
+            </div>
+            <div class="mode-card" onclick="selectMode('challenge')" id="mode-challenge">
+                <div class="mode-icon">⚡</div>
+                <h4>挑战模式</h4>
+                <p>限时答题<br>连对越多分越高</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设置 -->
+    <div class="settings-card" id="settingsCard">
+        <div class="setting-row">
+            <div class="setting-label">
+                题目数量
+                <span>建议 10-20 题</span>
+            </div>
+            <div class="setting-control">
+                <input type="number" id="qCount" value="10" min="5" max="50">
+            </div>
+        </div>
+        <div class="setting-row" id="chapterSetting" style="display:none">
+            <div class="setting-label">
+                选择章节
+            </div>
+            <div class="setting-control">
+                <select id="chapterSelect">
+                    <option value="1">第一章：有理数</option>
+                    <option value="2">第二章：代数式</option>
+                    <option value="3">第三章：一元一次方程</option>
+                    <option value="4">第四章：线段与角</option>
+                </select>
+            </div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-label">
+                显示解析
+                <span>答完立即看解释</span>
+            </div>
+            <div class="setting-control">
+                <div class="toggle-switch on" id="showHint" onclick="toggleSwitch(this)"></div>
+            </div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-label">
+                题型选择
+                <span>取消勾选则不出现该题</span>
+            </div>
+            <div class="setting-control" style="display:flex;gap:8px;flex-wrap:wrap">
+                <label style="font-size:0.82em;color:#666;display:flex;align-items:center;gap:4px">
+                    <input type="checkbox" checked value="choice"> 选择题
+                </label>
+                <label style="font-size:0.82em;color:#666;display:flex;align-items:center;gap:4px">
+                    <input type="checkbox" checked value="fill"> 填空题
+                </label>
+                <label style="font-size:0.82em;color:#666;display:flex;align-items:center;gap:4px">
+                    <input type="checkbox" checked value="judge"> 判断题
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="start-btn-wrap">
+        <button class="start-btn" onclick="startQuiz()">🚀 开始练习</button>
+    </div>
+</div>
+
+<!-- ===== 答题界面 ===== -->
+<div class="quiz-view" id="quizView">
+    <div class="quiz-header">
+        <div class="quiz-progress" id="quizProgress">第 1/X 题</div>
+        <div class="quiz-score">🌟 <span id="quizScore">0</span> 分</div>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="quizProgressBar" style="width:0%"></div></div>
+
+    <div class="quiz-card" id="quizCard">
+        <div class="quiz-number" id="quizNumber">第 1 题</div>
+        <div class="quiz-question" id="quizQuestion"></div>
+        <div class="quiz-hint" id="quizHint"></div>
+        <div class="option-list" id="optionList"></div>
+        <input class="fill-input" id="fillInput" placeholder="输入你的答案…" style="display:none">
+        <button class="fill-submit" id="fillSubmit" style="display:none" onclick="submitFill()">确认</button>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+    </div>
+
+    <div class="quiz-actions">
+        <button class="btn-hint" id="hintBtn" onclick="showHint()">💡 提示</button>
+        <button class="btn-next" id="nextBtn" onclick="nextQuestion()" disabled>下一题 →</button>
+    </div>
+</div>
+
+<!-- ===== 结果页 ===== -->
+<div class="result-view" id="resultView">
+    <div class="result-emoji" id="resultEmoji">🏆</div>
+    <div class="result-title" id="resultTitle">练习完成！</div>
+    <div class="result-desc" id="resultDesc"></div>
+    <div class="result-stats">
+        <div class="result-stat">
+            <div class="num" id="resultCorrect">0</div>
+            <div class="label">答对</div>
+        </div>
+        <div class="result-stat">
+            <div class="num" id="resultWrong">0</div>
+            <div class="label">答错</div>
+        </div>
+        <div class="result-stat">
+            <div class="num" id="resultScore">0</div>
+            <div class="label">得分</div>
+        </div>
+    </div>
+    <div class="result-btns">
+        <button class="btn-retry" onclick="retryQuiz()">🔄 再来一次</button>
+        <button class="btn-back" onclick="backToMode()">← 返回</button>
+    </div>
+</div>
+
+<div class="tab-bar">
+    <div class="tab-item" onclick="location.href='index.html'"><div class="tab-icon">🏠</div>首页</div>
+    <div class="tab-item" onclick="location.href='study.html'"><div class="tab-icon">📖</div>学习</div>
+    <div class="tab-item active"><div class="tab-icon">✏️</div>练习</div>
+    <div class="tab-item" onclick="location.href='data.html'"><div class="tab-icon">📈</div>数据</div>
+</div>
+
+<script>
+// ===== 题目数据库（示例，实际应扩展） =====
+const QUESTION_BANK = [
+    // 第一章 有理数
+    {id:'q1-1', chapter:1, section:'正数与负数', type:'choice',
+        q:'下列说法正确的是（ ）',
+        options:['A. 0是最小的正整数','B. 负数一定小于正数','C. 负号可以省略','D. 0°C表示没有温度'],
+        answer:1, // B
+        hint:'0既不是正数也不是负数；负数的负号不能省略；0°C是一个确定的温度。',
+        explanation:'选B。A错误（0不是正数）；B正确；C错误（负号不能省略）；D错误（0°C是确定的温度）。'
+    },
+    {id:'q1-2', chapter:1, section:'正数与负数', type:'fill',
+        q:'水位升高3米记作+3米，那么水位下降2米记作 ______ 米。',
+        answer:['-2','－2'],
+        hint:'下降用负数表示。',
+        explanation:'下降2米记作 -2 米。'
+    },
+    {id:'q1-3', chapter:1, section:'正数与负数', type:'judge',
+        q:'"－a一定是负数"这个说法是（对/错）的。',
+        answer:'错',
+        hint:'a本身可能是负数，此时－a是正数！',
+        explanation:'错。如果a是负数，那么－a就是正数。－a不一定是负数。'
+    },
+    {id:'q1-4', chapter:1, section:'数轴', type:'choice',
+        q:'数轴上的点A表示-2，将点A向右移动6个单位后到达点B，点B表示的数是（ ）',
+        options:['A. -6','B. -4','C. +4','D. +6'],
+        answer:2,
+        hint:'向右移动是加，向左移动是减。',
+        explanation:'-2 + 6 = 4，所以点B表示的数是+4。选C。'
+    },
+    {id:'q1-5', chapter:1, section:'数轴', type:'fill',
+        q:'数轴上表示+2的点与表示-3的点之间的距离是 ______ 个单位。',
+        answer:['5'],
+        hint:'用右边的数减去左边的数。',
+        explanation:'距离 = 2 - (-3) = 5 个单位。'
+    },
+    {id:'q1-6', chapter:1, section:'相反数', type:'choice',
+        q:'下列说法正确的是（ ）',
+        options:['A. 符号不同的两个数互为相反数','B. 互为相反数的两个数一定一正一负','C. 如果a+b=0，则a、b互为相反数','D. 0没有相反数'],
+        answer:2,
+        hint:'0的相反数是0，所以B不对。',
+        explanation:'选C。A错误（必须是"只有符号不同"）；B错误（0的相反数是0）；C正确；D错误（0有相反数，是0本身）。'
+    },
+    {id:'q1-7', chapter:1, section:'绝对值', type:'fill',
+        q:'如果|x| = 7，那么x = ______。（如有多个答案用"或"连接）',
+        answer:['7或-7','±7','7或－7'],
+        hint:'绝对值等于7的数有两个，分别在原点左右两侧。',
+        explanation:'|x|=7，则x=7或x=-7。绝对值具有"双值性"！'
+    },
+    {id:'q1-8', chapter:1, section:'绝对值', type:'judge',
+        q:'"|a| = a 恒成立"这个说法是（对/错）的。',
+        answer:'错',
+        hint:'当a<0时，|a|=-a，而不是a。',
+        explanation:'错。只有当a≥0时，|a|=a才成立。当a<0时，|a|=-a。'
+    },
+    // 更多题目可以继续添加...
+];
+
+// ===== 状态 =====
+let currentMode = 'random';
+let currentQuestions = [];
+let currentIndex = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let quizScore = 0;
+let challengeCombo = 0;
+
+// ===== 模式选择 =====
+function selectMode(mode){
+    currentMode = mode;
+    document.querySelectorAll('.mode-card').forEach(c=>c.classList.remove('selected'));
+    document.getElementById('mode-'+mode).classList.add('selected');
+    
+    // 章节练习显示章节选择
+    document.getElementById('chapterSetting').style.display = mode==='chapter'?'flex':'none';
+}
+
+function toggleSwitch(el){el.classList.toggle('on')}
+
+// ===== 开始练习 =====
+function startQuiz(){
+    const qCount = parseInt(document.getElementById('qCount').value) || 10;
+    const showHint = document.getElementById('showHint').classList.contains('on');
+    
+    // 筛选题目
+    let pool = [...QUESTION_BANK];
+    
+    if(currentMode==='weak'){
+        // 薄弱专项：从错题记录中优先出题
+        const store = JSON.parse(localStorage.getItem('mathStore')||'{}');
+        const weakTopics = (store.wrongQuestions||[]).map(q=>q.topic);
+        const weakSet = new Set(weakTopics);
+        pool.sort((a,b)=>{
+            const aWeak = weakSet.has(a.section)?1:0;
+            const bWeak = weakSet.has(b.section)?1:0;
+            return bWeak - aWeak;
+        });
+    }else if(currentMode==='chapter'){
+        const ch = parseInt(document.getElementById('chapterSelect').value);
+        pool = pool.filter(q=>q.chapter===ch);
+    }else if(currentMode==='challenge'){
+        // 挑战模式：全部题型，限时
+        pool = pool.sort(()=>Math.random()-0.5);
+    }
+    
+    // 随机打乱
+    pool = pool.sort(()=>Math.random()-0.5).slice(0, qCount);
+    
+    if(pool.length===0){
+        alert('暂无足够题目，请先学习更多章节！');
+        return;
+    }
+    
+    currentQuestions = pool;
+    currentIndex = 0;
+    correctCount = 0;
+    wrongCount = 0;
+    quizScore = 0;
+    challengeCombo = 0;
+    
+    document.getElementById('modeView').style.display = 'none';
+    document.getElementById('quizView').style.display = 'block';
+    document.getElementById('resultView').style.display = 'none';
+    
+    showQuestion();
+}
+
+// ===== 显示题目 =====
+function showQuestion(){
+    const q = currentQuestions[currentIndex];
+    document.getElementById('quizNumber').textContent = `第 ${currentIndex+1} 题`;
+    document.getElementById('quizProgress').textContent = `第 ${currentIndex+1}/${currentQuestions.length} 题`;
+    document.getElementById('quizScore').textContent = quizScore;
+    document.getElementById('quizProgressBar').style.width = `${(currentIndex/currentQuestions.length)*100}%`;
+    document.getElementById('quizQuestion').textContent = q.q;
+    document.getElementById('quizHint').classList.remove('show');
+    document.getElementById('quizHint').textContent = q.hint || '';
+    document.getElementById('quizFeedback').classList.remove('show');
+    document.getElementById('nextBtn').disabled = true;
+    
+    const optionList = document.getElementById('optionList');
+    const fillInput = document.getElementById('fillInput');
+    const fillSubmit = document.getElementById('fillSubmit');
+    
+    if(q.type==='choice'){
+        optionList.style.display = 'flex';
+        fillInput.style.display = 'none';
+        fillSubmit.style.display = 'none';
+        optionList.innerHTML = q.options.map((opt,i)=>`
+            <div class="option-btn" onclick="selectOption(this,${i},${q.answer})">
+                <div class="opt-letter">${String.fromCharCode(65+i)}</div>
+                <div>${opt}</div>
+            </div>
+        `).join('');
+    }else if(q.type==='fill'){
+        optionList.style.display = 'none';
+        fillInput.style.display = 'block';
+        fillSubmit.style.display = 'inline-block';
+        fillInput.value = '';
+        fillInput.onkeydown = (e)=>{if(e.key==='Enter')submitFill()};
+    }else if(q.type==='judge'){
+        optionList.style.display = 'flex';
+        fillInput.style.display = 'none';
+        fillSubmit.style.display = 'none';
+        optionList.innerHTML = `
+            <div class="option-btn" onclick="selectOption(this,0,0)">
+                <div class="opt-letter">✓</div><div>对</div>
+            </div>
+            <div class="option-btn" onclick="selectOption(this,1,0)">
+                <div class="opt-letter">✗</div><div>错</div>
+            </div>
+        `;
+        // 判断题答案存在 answer 字段，'对' 或 '错'
+    }
+}
+
+// ===== 选择题作答 =====
+function selectOption(el, chosen, correctIndex){
+    const q = currentQuestions[currentIndex];
+    const options = el.parentElement.querySelectorAll('.option-btn');
+    options.forEach(o=>o.classList.add('disabled'));
+    
+    let isCorrect = false;
+    if(q.type==='judge'){
+        const userAns = chosen===0?'对':'错';
+        isCorrect = userAns===q.answer;
+        // 标记正确答案
+        options.forEach((o,i)=>{
+            const optAns = i===0?'对':'错';
+            if(optAns===q.answer) o.classList.add('correct');
+            if(i===chosen && optAns!==q.answer) o.classList.add('wrong');
+        });
+    }else{
+        isCorrect = (chosen===correctIndex);
+        options.forEach((o,i)=>{
+            if(i===correctIndex) o.classList.add('correct');
+            if(i===chosen && !isCorrect) o.classList.add('wrong');
+        });
+    }
+    
+    showQuizResult(isCorrect, q);
+}
+
+// ===== 填空题作答 =====
+function submitFill(){
+    const q = currentQuestions[currentIndex];
+    const input = document.getElementById('fillInput');
+    const val = input.value.trim();
+    
+    const isCorrect = q.answer.some(a=>a.replace(/\s/g,'')===val.replace(/\s/g,''));
+    showQuizResult(isCorrect, q);
+    
+    input.disabled = true;
+    document.getElementById('fillSubmit').disabled = true;
+}
+
+// ===== 显示答题结果 =====
+function showQuizResult(isCorrect, q){
+    const fb = document.getElementById('quizFeedback');
+    fb.classList.add('show');
+    
+    if(isCorrect){
+        correctCount++;
+        challengeCombo++;
+        let bonus = 10;
+        if(currentMode==='challenge'){
+            bonus = 10 + challengeCombo*2; // 连击加分
+        }
+        quizScore += bonus;
+        fb.className = 'quiz-feedback show correct';
+        fb.innerHTML = `✅ 答对了！${currentMode==='challenge'?'<br>🔥 连击 x'+challengeCombo:''}<br>${q.explanation}`;
+    }else{
+        wrongCount++;
+        challengeCombo = 0;
+        fb.className = 'quiz-feedback show wrong';
+        fb.innerHTML = `❌ 答错了。<br>${q.explanation}`;
+        // 记录错题
+        const store = JSON.parse(localStorage.getItem('mathStore')||'{}');
+        if(!store.wrongQuestions)store.wrongQuestions=[];
+        store.wrongQuestions.push({
+            topic: q.section,
+            question: q.q,
+            date: new Date().toISOString().slice(0,10)
+        });
+        localStorage.setItem('mathStore',JSON.stringify(store));
+    }
+    
+    document.getElementById('quizScore').textContent = quizScore;
+    document.getElementById('nextBtn').disabled = false;
+}
+
+// ===== 提示 =====
+function showHint(){
+    document.getElementById('quizHint').classList.add('show');
+    document.getElementById('hintBtn').disabled = true;
+}
+
+// ===== 下一题 =====
+function nextQuestion(){
+    currentIndex++;
+    if(currentIndex >= currentQuestions.length){
+        showResult();
+    }else{
+        showQuestion();
+    }
+}
+
+// ===== 显示结果 =====
+function showResult(){
+    document.getElementById('quizView').style.display = 'none';
+    document.getElementById('resultView').style.display = 'block';
+    
+    const total = currentQuestions.length;
+    const pct = Math.round(correctCount/total*100);
+    
+    let emoji, title, desc;
+    if(pct>=90){emoji='🏆';title='太厉害了！';desc=`你答对了 ${correctCount}/${total} 题，正确率 ${pct}%！\n简直是数学小天才！`}
+    else if(pct>=70){emoji='🎉';title='做得不错！';desc=`你答对了 ${correctCount}/${total} 题，正确率 ${pct}%。\n继续努力，你可以更好！`}
+    else if(pct>=50){emoji='💪';title='继续加油！';desc=`你答对了 ${correctCount}/${total} 题，正确率 ${pct}%。\n多练习几遍，下次一定更好！`}
+    else{emoji='📚';title='别灰心！';desc=`你答对了 ${correctCount}/${total} 题。\n建议先复习一下相关章节再来练习哦！`}
+    
+    document.getElementById('resultEmoji').textContent = emoji;
+    document.getElementById('resultTitle').textContent = title;
+    document.getElementById('resultDesc').textContent = desc;
+    document.getElementById('resultCorrect').textContent = correctCount;
+    document.getElementById('resultWrong').textContent = wrongCount;
+    document.getElementById('resultScore').textContent = quizScore;
+    
+    // 保存积分
+    const store = JSON.parse(localStorage.getItem('mathStore')||'{}');
+    store.score = (store.score||0) + quizScore;
+    localStorage.setItem('mathStore',JSON.stringify(store));
+}
+
+function retryQuiz(){startQuiz()}
+function backToMode(){
+    document.getElementById('modeView').style.display = 'block';
+    document.getElementById('resultView').style.display = 'none';
+}
+
+// 初始化
+selectMode('random');
+</script>
+</body>
+</html>
