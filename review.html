@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>错题回顾 · 数学预习助手</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f7fa;color:#2c3e50;padding-bottom:80px}
+.top-nav{background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:14px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.12)}
+.back-btn{background:rgba(255,255,255,0.25);color:white;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:0.9em}
+.page-title{font-size:1.05em;font-weight:bold}
+
+.review-container{padding:16px;max-width:800px;margin:0 auto}
+
+.review-card{
+    background:white;border-radius:16px;padding:20px;margin-bottom:16px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    border-left:4px solid #ff7043;
+}
+.review-card .section-info{font-size:0.82em;color:#888;margin-bottom:8px}
+.review-card .question{font-size:0.95em;color:#333;margin-bottom:12px;line-height:1.6}
+.review-card .your-answer{font-size:0.88em;color:#ff7043;margin-bottom:6px}
+.review-card .correct-answer{font-size:0.88em;color:#4caf50;margin-bottom:12px}
+.review-card .explanation{font-size:0.85em;color:#666;line-height:1.6;background:#f8f9ff;padding:10px 12px;border-radius:8px;border-left:3px solid #667eea}
+
+.empty-state{text-align:center;padding:60px 20px;color:#999}
+.empty-state .icon{font-size:3em;margin-bottom:16px}
+.empty-state p{font-size:0.95em}
+
+.action-bar{display:flex;gap:12px;margin-bottom:16px}
+.action-btn{
+    flex:1;padding:12px;background:white;border:none;border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);font-size:0.9em;cursor:pointer;
+    transition:all 0.2s;
+}
+.action-btn:active{transform:scale(0.97)}
+.action-btn.danger{color:#ff7043}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+    <button class="back-btn" onclick="history.back()">← 返回</button>
+    <div class="page-title">🔁 错题回顾</div>
+</div>
+
+<div class="review-container">
+    <div class="action-bar">
+        <button class="action-btn" onclick="loadWrongQuestions()">🔄 刷新</button>
+        <button class="action-btn danger" onclick="clearWrongQuestions()">🗑️ 清空错题</button>
+    </div>
+
+    <div id="wrongList"></div>
+</div>
+
+<script>
+// 加载错题
+function loadWrongQuestions() {
+    var store = JSON.parse(localStorage.getItem('mathStore') || '{}');
+    if (!store.wrongQuestions) store.wrongQuestions = [];
+    
+    var list = document.getElementById('wrongList');
+    list.innerHTML = '';
+    
+    if (store.wrongQuestions.length === 0) {
+        list.innerHTML = '<div class="empty-state">'
+                       + '<div class="icon">📭</div>'
+                       + '<p>还没有错题记录</p>'
+                       + '<p style="font-size:0.85em;margin-top:8px">做完练习题后，答错的题目会自动记录在这里</p>'
+                       + '</div>';
+        return;
+    }
+    
+    // 显示错题（最新的在前面）
+    for (var i = store.wrongQuestions.length - 1; i >= 0; i--) {
+        var wq = store.wrongQuestions[i];
+        var card = document.createElement('div');
+        card.className = 'review-card';
+        card.innerHTML = '<div class="section-info">' + (wq.chapter || '') + ' · ' + (wq.section || '') + '</div>'
+                      + '<div class="question"><b>题目：</b>' + wq.question + '</div>'
+                      + '<div class="your-answer"><b>你的答案：</b>' + wq.yourAnswer + '</div>'
+                      + '<div class="correct-answer"><b>正确答案：</b>' + wq.correctAnswer + '</div>'
+                      + (wq.explanation ? '<div class="explanation"><b>解析：</b>' + wq.explanation + '</div>' : '')
+                      + '<div style="margin-top:12px;font-size:0.82em;color:#999">错误次数：' + (wq.count || 1) + ' 次 | 最近错误：' + (wq.lastWrong || '') + '</div>';
+        list.appendChild(card);
+    }
+}
+
+// 清空错题
+function clearWrongQuestions() {
+    if (!confirm('确定要清空所有错题记录吗？')) return;
+    var store = JSON.parse(localStorage.getItem('mathStore') || '{}');
+    store.wrongQuestions = [];
+    localStorage.setItem('mathStore', JSON.stringify(store));
+    loadWrongQuestions();
+}
+
+// 页面加载时自动加载错题
+loadWrongQuestions();
+</script>
+
+</body>
+</html>

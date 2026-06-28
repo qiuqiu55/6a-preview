@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试页面 - 数学预习助手</title>
+<style>
+body { font-family: monospace; padding: 20px; background: #f5f7fa; }
+.test-result { margin: 10px 0; padding: 10px; border-radius: 8px; }
+.pass { background: #e8f5e9; color: #1b5e20; }
+.fail { background: #ffebee; color: #b71c1c; }
+.info { background: #e3f2fd; color: #1565c0; }
+h2 { margin-top: 30px; }
+</style>
+</head>
+<body>
+<h1>🧪 数学预习助手 - 功能测试</h1>
+<div id="results"></div>
+
+<script src="data/ch1.js"></script>
+<script src="data/ch2.js"></script>
+<script src="data/ch3.js"></script>
+<script src="data/ch4.js"></script>
+<script src="data/ch5.js"></script>
+<script src="data/ch6.js"></script>
+
+<script>
+var results = document.getElementById('results');
+
+function addResult(cls, msg) {
+    var div = document.createElement('div');
+    div.className = 'test-result ' + cls;
+    div.textContent = msg;
+    results.appendChild(div);
+}
+
+/* 测试1：数据文件加载 */
+addResult('info', '【测试1】检查数据文件加载...');
+var expectedSections = {
+    'ch1': 11, 'ch2': 7, 'ch3': 3, 'ch4': 6, 'ch5': 6, 'ch6': 11
+};
+var totalLoaded = 0;
+var keys = Object.keys(SECTION_DATA);
+addResult('info', 'SECTION_DATA 加载成功，共 ' + keys.length + ' 个小节');
+
+for (var ch in expectedSections) {
+    var count = 0;
+    for (var i = 0; i < keys.length; i++) {
+        if (keys[i].indexOf(ch + '-') === 0) count++;
+    }
+    if (count === expectedSections[ch]) {
+        addResult('pass', '✅ ' + ch + ' 加载完整：' + count + '/' + expectedSections[ch] + ' 节');
+    } else {
+        addResult('fail', '❌ ' + ch + ' 加载不完整：' + count + '/' + expectedSections[ch] + ' 节');
+    }
+    totalLoaded += count;
+}
+addResult('info', '总计加载：' + totalLoaded + ' 个小节');
+
+/* 测试2：检查 study_v3.html 的 URL 参数处理 */
+addResult('info', '【测试2】检查 study_v3.html 的 URL 参数处理...');
+addResult('info', '请在 study_v3.html 后加上 ?ch=5 测试，如：');
+addResult('info', '  http://localhost:8899/study_v3.html?ch=5');
+addResult('info', '应该自动打开"第五章：数的整除"');
+
+/* 测试3：检查多空题数据格式 */
+addResult('info', '【测试3】检查多空题数据格式...');
+var multiBlankFound = false;
+for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var data = SECTION_DATA[key];
+    if (!data || !data.layers) continue;
+    for (var j = 0; j < data.layers.length; j++) {
+        var layer = data.layers[j];
+        if (!layer.exercises) continue;
+        for (var k = 0; k < layer.exercises.length; k++) {
+            var ex = layer.exercises[k];
+            if (ex.type === 'fill' && ex.answers && Array.isArray(ex.answers[0])) {
+                multiBlankFound = true;
+                addResult('pass', '✅ 找到多空题：' + key + ' 第' + (j+1) + '层 练习' + (k+1));
+            }
+        }
+    }
+}
+if (!multiBlankFound) {
+    addResult('info', 'ℹ️  未找到多空题（可能 1.4 绝对值还没加到 ch1.js）');
+}
+
+addResult('info', '【手动测试清单】');
+addResult('info', '1. 打开 http://localhost:8899/study_v3.html');
+addResult('info', '2. 点击"第一章：有理数" → 1.4 绝对值');
+addResult('info', '3. 看"即时练习"里有没有多空题（多个输入框）');
+addResult('info', '4. 输入答案，点"确认"，看反馈对不对');
+addResult('info', '5. 点顶部"数的整除"标签，看目录对不对');
+addResult('info', '6. 点"分数"标签，看 11 节目录对不对');
+</script>
+</body>
+</html>
